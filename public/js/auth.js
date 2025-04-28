@@ -32,11 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            const {status} = data;
-            if (status === 200) {
-                alertas("divAlertas", "success", "Usuario creado. Confirma tu Cuenta en tu Email");
-            } else{
-                alertas("divAlertas", "error", "Error en registo de usuario");
+            if (data.status === 400){
+                alertas(data.status, "Errores", data.errores)
+            } else if(data.status === 200) {
+                alertas(data.status,"Usuario registrado correctamente. Confirma en tu email", data.errores)
             }
         }).catch((error) => {
             console.log(error)
@@ -44,27 +43,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function alertas(lugar, tipo, msg) {
-        if (lugar === "divAlertas") {
-            const divAlertas = document.querySelector("#divAlertas");
-            if (tipo === "success") {
-                const divAlerta = document.createElement("div");
-                divAlerta.textContent = msg;
-                divAlerta.classList.add("bg-success", "px-3", "py-2", "text-white", "text-center", "fw-semibold", "mb-4", "rounded", "text-uppercase");
-                divAlertas.appendChild(divAlerta);
-                setTimeout(() => {
-                    divAlertas.innerHTML = "";
-                }, 4000);
-            } else {
-                const divAlerta = document.createElement("div");
-                divAlerta.textContent = msg;
-                divAlerta.classList.add("bg-danger", "px-3", "py-2", "text-white", "text-center", "fw-semibold", "mb-4", "rounded", "text-uppercase");
-                divAlertas.appendChild(divAlerta);
-                setTimeout(() => {
-                    divAlertas.innerHTML = "";
-                }, 4000);
-            }
-
+    function alertas(status, msg, errores) {
+        const divAlertas = document.querySelector("#divAlertas");
+        divAlertas.innerHTML = "";
+        if (status === 400){
+            errores.forEach((error) => {
+                const divError = document.createElement("div");
+                divError.textContent = error.msg;
+                divError.classList.add("bg-danger", "px-3", "py-2", "text-white", "text-center", "fw-semibold", "my-2", "rounded", "text-uppercase");
+                divAlertas.appendChild(divError);
+            });
+            setTimeout(() => {
+                divAlertas.innerHTML = "";
+            }, 5000);
+        } else {
+            const divAlerta = document.createElement("div");
+            divAlerta.textContent = msg;
+            divAlerta.classList.add("bg-success", "px-3", "py-2", "text-white", "text-center", "fw-semibold", "mb-4", "rounded", "text-uppercase");
+            divAlertas.appendChild(divAlerta);
+            setTimeout(() => {
+                divAlertas.innerHTML = "";
+            }, 4000);
         }
     }
 });
