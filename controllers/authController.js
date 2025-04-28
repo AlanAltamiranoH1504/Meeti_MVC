@@ -1,3 +1,7 @@
+import Usuario from "../models/Usuario.js";
+import bcrypt from "bcrypt";
+import {tokenGeneral} from "../helpers/Tokens.js";
+
 const registro = (req, res) => {
     res.render("auth/crearCuenta", {
         nombrePagina: "Registro",
@@ -5,12 +9,25 @@ const registro = (req, res) => {
     });
 }
 
-const registroDB = (req, res) => {
-    const responseJSON = {
-        data: "llego",
-        cuerpo: req.body
+const registroDB = async (req, res) => {
+    const {email, nombre, password, confimarPassword} = req.body;
+    try {
+        const passwordHash = await bcrypt.hash(password, 10);
+        const token = tokenGeneral();
+        const usuarioSave = await Usuario.create({
+            email,
+            nombre,
+            password: passwordHash,
+            token_usuario: token
+        });
+        const response = {
+            msg: "Usuario creado correctamente"
+        }
+        return res.status(201).json(response);
+    }catch (error){
+        console.log("Error en guardado de usuario");
+        console.log(error.message);
     }
-    return res.status(201).json(responseJSON);
 }
 
 export {

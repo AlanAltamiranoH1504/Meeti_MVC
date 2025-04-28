@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputEmail = document.querySelector("#email").value;
         const inputNombre = document.querySelector("#nombre").value;
         const inputPassword = document.querySelector("#password").value;
-        const inputPasswordDos = document.querySelector("#confirmar-password").value;
+        const inputPasswordDos = document.querySelector("#confirmarPassword").value;
 
         const bodyData = {
             email: inputEmail,
@@ -32,9 +32,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log(data);
+            alertas("divAlertas", "success", "Usuario creado. Confirma tu Cuenta en tu Email");
         }).catch((error) => {
             console.log(error);
         });
+    }
+
+    function alertas(lugar, tipo, msg) {
+        if (lugar === "divAlertas") {
+            const divAlertas = document.querySelector("#divAlertas");
+            if (tipo === "success") {
+                const divAlerta = document.createElement("div");
+                divAlerta.textContent = msg;
+                divAlerta.classList.add("bg-success", "px-3", "py-2", "text-white", "text-center", "fw-semibold", "mb-4", "rounded", "text-uppercase");
+                divAlertas.appendChild(divAlerta);
+            }
+            setTimeout(() => {
+                divAlertas.innerHTML = "";
+            }, 4000);
+        }
     }
 });

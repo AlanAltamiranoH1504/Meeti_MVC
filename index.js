@@ -19,6 +19,7 @@ dotenv.config();
 
 import authRoutes from "./routes/authRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
+import conexion from "./config/db.js";
 
 //Definicion de servidor
 const app = express();
@@ -26,6 +27,15 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log("Servidor corriendo en el puerto 3000");
 });
+
+//Definicion de conexion a base de datos
+try{
+    conexion.authenticate();
+    console.log("Conexion correcta a la base de datos")
+}catch (error){
+    console.log("Error en conexion a la base de datos");
+    console.log(error.message);
+}
 
 //Definicion de EJS como Template engine
 app.use(expressLayouts)
@@ -42,6 +52,9 @@ app.use(express.json());
 
 //Habilitacion de carpeta y archivos public
 app.use(express.static(path.join(__dirname, "public")));
+
+//Habilitacion de bootstrap
+app.use('/static', express.static(path.join(__dirname, 'node_modules')));
 
 //Rutas para auth
 app.use("/auth", authRoutes);

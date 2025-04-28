@@ -2,6 +2,7 @@
     <h1><%= nombrePagina%></h1>
 
     <form action="" method="post" class="default-form" id="formCrearCuenta">
+        <div id="divAlertas"></div>
         <div class="campo">
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" placeholder="Ingresa tu email">
@@ -15,11 +16,11 @@
             <input type="password" name="password" id="password" placeholder="Minimo 5 caracteres">
         </div>
         <div class="campo">
-            <label for="confirmar-password">Confirma la Contraseña:</label>
-            <input type="password" name="confirmar-password" id="confirmar-password" placeholder="Confirma tu password">
+            <label for="confirmarPassword">Confirma la Contraseña:</label>
+            <input type="password" name="confirmarPassword" id="confirmarPassword" placeholder="Confirma tu password">
         </div>
         <div class="campo enviar">
-            <input type="submit" name="btnSubmitRegistro" value="Crear Cuenta" class="btn btn-rosa">
+            <input type="submit" name="btnSubmitRegistro" value="Crear Cuenta" class="btn fw-semibold btn-primary">
         </div>
     </form>
     <script src="/js/auth.js"></script>
