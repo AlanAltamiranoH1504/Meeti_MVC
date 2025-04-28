@@ -1,13 +1,9 @@
-
-const home = (req, res) => {
-    res.render("home");
-}
-
-const inicio = (req, res) => {
-    res.render("auth/crearCuenta");
+const registro = (req, res) => {
+    res.render("auth/crearCuenta", {
+        nombrePagina: "Registro"
+    });
 }
 
 export {
-    home,
-    inicio
+    registro
 }

@@ -7,13 +7,15 @@
 import express from 'express';
 import expressLayouts from "express-ejs-layouts"
 import dotenv from 'dotenv';
-import authRoutes from "./routes/authRoutes.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import * as path from "node:path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 dotenv.config();
+
+import authRoutes from "./routes/authRoutes.js";
+import homeRoutes from "./routes/homeRoutes.js";
 
 //Definicion de servidor
 const app = express();
@@ -32,3 +34,4 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //Rutas para auth
 app.use("/auth", authRoutes);
+app.use("/", homeRoutes);

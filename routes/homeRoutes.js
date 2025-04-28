@@ -1,9 +1,9 @@
 import express from "express";
 const router = express.Router();
 import {
-    registro
-} from "../controllers/authController.js";
+    home
+} from "../controllers/homeController.js";
 
-router.get("/crear-cuenta", registro);
+router.get("/", home);
 
 export default router;

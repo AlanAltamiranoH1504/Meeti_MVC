@@ -1,13 +1,25 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Prueba</h1>
-</body>
-</html>
+<main class="contenedor contenedor-formularios">
+    <h1><%= nombrePagina%></h1>
+
+    <form action="/auth/crear-cuenta" method="post" class="default-form">
+        <div class="campo">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" placeholder="Ingresa tu email">
+        </div>
+        <div class="campo">
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" id="nombre" placeholder="Nombre de la persona u organización">
+        </div>
+        <div class="campo">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" placeholder="Minimo 5 caracteres">
+        </div>
+        <div class="campo">
+            <label for="confirmar-password">Confirma la Contraseña:</label>
+            <input type="password" name="confirmar-password" id="confirmar-password" placeholder="Confirma tu password">
+        </div>
+        <div class="campo enviar">
+            <input type="submit" name="btnSubmitRegistro" value="Crear Cuenta" class="btn btn-rosa">
+        </div>
+    </form>
+</main>
