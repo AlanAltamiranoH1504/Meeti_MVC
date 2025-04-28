@@ -7,6 +7,7 @@
 import express from 'express';
 import expressLayouts from "express-ejs-layouts"
 import dotenv from 'dotenv';
+import createError from "http-errors";
 import csurf from "csurf";
 import cookieParser from "cookie-parser";
 import {fileURLToPath} from 'url';
@@ -59,3 +60,16 @@ app.use('/static', express.static(path.join(__dirname, 'node_modules')));
 //Rutas para auth
 app.use("/auth", authRoutes);
 app.use("/", homeRoutes);
+
+//Ruta para errores
+app.use((req, res, next) => {
+    next(createError(404, "Recurso no encontrado"));
+});
+app.use((error, req, res, next) => {
+   const errorVista = error.message;
+   const status = error.status || 500;
+   res.render("error", {
+       errorVista,
+       status
+   });
+});

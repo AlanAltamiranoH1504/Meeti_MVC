@@ -21,12 +21,16 @@ const registroDB = async (req, res) => {
             token_usuario: token
         });
         const response = {
-            msg: "Usuario creado correctamente"
+            msg: "Usuario creado correctamente",
+            status: 200
         }
         return res.status(201).json(response);
     }catch (error){
-        console.log("Error en guardado de usuario");
-        console.log(error.message);
+        const response = {
+            msg: error.message,
+            status: 500
+        }
+        return res.status(500).json(response);
     }
 }
 

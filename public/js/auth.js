@@ -32,9 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            alertas("divAlertas", "success", "Usuario creado. Confirma tu Cuenta en tu Email");
+            const {status} = data;
+            if (status === 200) {
+                alertas("divAlertas", "success", "Usuario creado. Confirma tu Cuenta en tu Email");
+            } else{
+                alertas("divAlertas", "error", "Error en registo de usuario");
+            }
         }).catch((error) => {
-            console.log(error);
+            console.log(error)
+            alertas("divAlertas", "error", error.message);
         });
     }
 
@@ -46,10 +52,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 divAlerta.textContent = msg;
                 divAlerta.classList.add("bg-success", "px-3", "py-2", "text-white", "text-center", "fw-semibold", "mb-4", "rounded", "text-uppercase");
                 divAlertas.appendChild(divAlerta);
+                setTimeout(() => {
+                    divAlertas.innerHTML = "";
+                }, 4000);
+            } else {
+                const divAlerta = document.createElement("div");
+                divAlerta.textContent = msg;
+                divAlerta.classList.add("bg-danger", "px-3", "py-2", "text-white", "text-center", "fw-semibold", "mb-4", "rounded", "text-uppercase");
+                divAlertas.appendChild(divAlerta);
+                setTimeout(() => {
+                    divAlertas.innerHTML = "";
+                }, 4000);
             }
-            setTimeout(() => {
-                divAlertas.innerHTML = "";
-            }, 4000);
+
         }
     }
 });
