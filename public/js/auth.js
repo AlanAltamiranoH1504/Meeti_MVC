@@ -3,21 +3,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const formCrearCuenta = document.querySelector("#formCrearCuenta");
 
     //Eventos
-    formCrearCuenta.addEventListener("click", submitFormularioCrearCuenta);
+    formCrearCuenta.addEventListener("submit", submitFormularioCrearCuenta);
 
     //Funciones
     function submitFormularioCrearCuenta(e){
-        const bodyUsuario = {
-            nombre: "Alan",
-            email: "alan@gmail.com"
+        e.preventDefault();
+        const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+        const inputEmail = document.querySelector("#email").value;
+        const inputNombre = document.querySelector("#nombre").value;
+        const inputPassword = document.querySelector("#password").value;
+        const inputPasswordDos = document.querySelector("#confirmar-password").value;
+
+        const bodyData = {
+            email: inputEmail,
+            nombre: inputNombre,
+            password: inputPassword,
+            confirmar: inputPasswordDos
         };
 
-        fetch("auth/crear-cuenta", {
+        fetch("/auth/crear-cuenta", {
             method: "POST",
             headers: {
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                "csrf-token": csrf
             },
-            body: JSON.stringify(bodyUsuario)
+            body: JSON.stringify(bodyData)
         }).then((response) => {
             return response.json();
         }).then((data) => {

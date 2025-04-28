@@ -7,9 +7,12 @@
 import express from 'express';
 import expressLayouts from "express-ejs-layouts"
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import csurf from "csurf";
+import cookieParser from "cookie-parser";
+import {fileURLToPath} from 'url';
+import {dirname} from 'path';
 import * as path from "node:path";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 dotenv.config();
@@ -28,6 +31,14 @@ app.listen(port, () => {
 app.use(expressLayouts)
 app.set("view engine", "ejs");
 app.set("views", "./views");
+
+//Definicion de proteccion CSRF
+app.use(cookieParser());
+app.use(csurf({cookie: true}));
+
+//Habilitacion lectura de formulario
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 //Habilitacion de carpeta y archivos public
 app.use(express.static(path.join(__dirname, "public")));

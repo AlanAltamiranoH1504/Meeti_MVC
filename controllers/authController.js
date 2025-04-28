@@ -1,13 +1,15 @@
 const registro = (req, res) => {
     res.render("auth/crearCuenta", {
-        nombrePagina: "Registro"
+        nombrePagina: "Registro",
+        csrf: req.csrfToken()
     });
 }
 
 const registroDB = (req, res) => {
     const responseJSON = {
-        "mensaje": "Lllego al controlador y paso todo"
-    };
+        data: "llego",
+        cuerpo: req.body
+    }
     return res.status(201).json(responseJSON);
 }
 
