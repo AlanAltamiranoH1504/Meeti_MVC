@@ -1,7 +1,8 @@
 <main class="contenedor contenedor-formularios">
     <h1><%= nombrePagina%></h1>
 
-    <form action="/auth/crear-cuenta" method="post" class="default-form">
+    <form action="" method="post" class="default-form" id="formCrearCuenta">
+<!--        /auth/crear-cuenta-->
         <div class="campo">
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" placeholder="Ingresa tu email">
@@ -22,4 +23,5 @@
             <input type="submit" name="btnSubmitRegistro" value="Crear Cuenta" class="btn btn-rosa">
         </div>
     </form>
+    <script src="/js/auth.js"></script>
 </main>

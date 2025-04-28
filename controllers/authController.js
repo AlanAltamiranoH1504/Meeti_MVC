@@ -4,6 +4,14 @@ const registro = (req, res) => {
     });
 }
 
+const registroDB = (req, res) => {
+    const responseJSON = {
+        "mensaje": "Lllego al controlador y paso todo"
+    };
+    return res.status(201).json(responseJSON);
+}
+
 export {
-    registro
+    registro,
+    registroDB
 }
