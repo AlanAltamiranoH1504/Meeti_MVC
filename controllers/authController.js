@@ -1,6 +1,7 @@
 import Usuario from "../models/Usuario.js";
 import bcrypt from "bcrypt";
 import {tokenGeneral} from "../helpers/Tokens.js";
+import {confirmacionEmail} from "../helpers/Emails.js";
 
 const registro = (req, res) => {
     res.render("auth/crearCuenta", {
@@ -17,39 +18,39 @@ const registroDB = async (req, res) => {
     });
     const errores = [];
 
-    if (usuarioExistente !== null && usuarioExistente !== undefined){
+    if (usuarioExistente !== null && usuarioExistente !== undefined) {
         const error = {
             msg: "Ya hay un usuario registrado con ese email"
         }
         errores.push(error);
     }
 
-    if (email.trim() === "" || email == null){
+    if (email.trim() === "" || email == null) {
         const error = {
             msg: "El campo de email no puede ser vacio"
         }
         errores.push(error);
     }
 
-    if (nombre.trim() === "" || nombre == null){
+    if (nombre.trim() === "" || nombre == null) {
         const error = {
             msg: "El campo nombre no puede ser vacio"
         }
         errores.push(error);
     }
-    if (password.trim() === "" || password == null){
+    if (password.trim() === "" || password == null) {
         const error = {
             msg: "El campo password no puede ser vacio"
         }
         errores.push(error);
     }
-    if (password.length < 5){
+    if (password.length < 5) {
         const error = {
             msg: "La password debe ser de minimo 5 caracteres"
         }
         errores.push(error);
     }
-    if (password !== confirmar){
+    if (password !== confirmar) {
         const error = {
             msg: "Las passwords no coinciden"
         }
@@ -57,8 +58,8 @@ const registroDB = async (req, res) => {
     }
 
     //Validacion de array de errores
-    if (errores.length >= 1){
-        const response  = {
+    if (errores.length >= 1) {
+        const response = {
             status: 400,
             msg: "Errores en la peticion",
             errores
@@ -78,8 +79,9 @@ const registroDB = async (req, res) => {
                 msg: "Usuario creado correctamente. Confirma tu cuenta en Email",
                 status: 200
             }
+            confirmacionEmail(nombre, email, token);
             return res.status(201).json(response);
-        }catch (error){
+        } catch (error) {
             const response = {
                 msg: error.message,
                 status: 500
@@ -89,7 +91,42 @@ const registroDB = async (req, res) => {
     }
 }
 
+const confimarCuenta = (req, res) => {
+    const tokenQueryParam = req.params.token;
+    res.render("auth/confirmarCuenta", {
+        nombrePagina: "Confirmación de Usuario",
+        csrf: req.csrfToken(),
+        tokenQueryParam
+    });
+}
+
+const confirmacionBack = async (req, res) => {
+    const {token} = req.body;
+    try {
+        const usuarioFound = await Usuario.findOne({
+            where: {token_usuario:token}
+        });
+        usuarioFound.token_usuario = null
+        usuarioFound.confirmado = true;
+        usuarioFound.save();
+        const response = {
+            status: 200,
+            msg: "Cuenta confirmada correctamente",
+            token
+        }
+        res.status(200).json(response);
+    }catch (error){
+        const response = {
+            status: 500,
+            "msg": "Error en confirmacion de usuario"
+        }
+        return res.status(500).json(response);
+    }
+}
+
 export {
     registro,
-    registroDB
+    registroDB,
+    confimarCuenta,
+    confirmacionBack
 }

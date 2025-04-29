@@ -1,0 +1,28 @@
+<main class="contenedor contenedor-formularios">
+    <h1><%- nombrePagina%></h1>
+
+    <div class="container-xl d-none" id="alertaSucces">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8">
+                <p class="text-center text-uppercase fw-semibold bg-success text-white px-3 py-2 rounded">Usuario Confirmado con Exito</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-xl d-none" id="alertaError">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8">
+                <p class="text-center text-uppercase fw-semibold bg-danger text-white px-3 py-2 rounded">Error en confirmacion de Usuario</p>
+            </div>
+        </div>
+    </div>
+
+    <form action="#" method="post" class="default-form" id="formConfirmacionCuenta">
+        <input type="hidden" name="tokenUsuario" id="tokenUsuario" value="<%- tokenQueryParam%>">
+
+        <div class="d-flex justify-content-center mt-4">
+            <input type="submit" name="btnSubmitConfirmar" value="Confirmar Cuenta" class="btnCodigo btn-rosaCodigo">
+        </div>
+    </form>
+    <script src="/js/confirmacion.js"></script>
+</main>

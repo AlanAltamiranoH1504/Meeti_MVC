@@ -62,7 +62,7 @@ p {
 }
 
 /** botones **/
-.btn {
+.btnCodigo {
     padding: 1rem 4rem;
     text-align: center;
     font-weight: 700;
@@ -75,19 +75,19 @@ p {
     flex : 0 0 100%;
 }
 @media (min-width: 768px) {
-    .btn {
+    .btnCodigo {
         width: auto;
         display: inline-block;
         flex: 0 0 auto;
     }
 }
-.btn:hover {
+.btnCodigo:hover {
     cursor: pointer;
 }
 .btn-amarillo {
     background-color: #FF8000;
 }
-.btn-rosa {
+.btn-rosaCodigo {
     background-color: #B8336A;
 }
 .btn-azul {
