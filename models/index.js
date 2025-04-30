@@ -13,7 +13,9 @@ Grupo.belongsTo(Categoria,{
     onDelete: "CASCADE",
 });
 //Una categoria puede tener muchos grupos
-Categoria.hasMany(Grupo);
+Categoria.hasMany(Grupo, {
+    foreignKey: "categoria_id",
+});
 
 //Un grupo pertenece a un usuario
 Grupo.belongsTo(Usuario, {
@@ -22,7 +24,9 @@ Grupo.belongsTo(Usuario, {
     onDelete: "CASCADE"
 });
 //Un usuario puede tener muchos grupos
-Usuario.hasMany(Grupo);
+Usuario.hasMany(Grupo, {
+    foreignKey: "usuario_id",
+});
 
 export {
     Usuario,

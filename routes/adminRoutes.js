@@ -5,11 +5,12 @@ import {
     panelDeAdministracion
 } from "../controllers/adminController.js";
 import {
-        formNuevoGrupo
+    formNuevoGrupo, saveGrupo
 } from "../controllers/grupoController.js";
 
 router.get("/panel-administracion", protegerRuta, panelDeAdministracion);
 router.get("/nuevo-grupo", protegerRuta, formNuevoGrupo);
+router.post("/save-grupo", protegerRuta, saveGrupo);
 
 
 export default router;
