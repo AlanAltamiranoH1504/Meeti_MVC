@@ -2,9 +2,11 @@
     <h1><%- nombrePagina%></h1>
 
     <form class="default-form" id="formNuevoGrupo" method="post" enctype="multipart/form-data">
+        <div id="divAlertas"></div>
+
         <div class="campo">
             <label for="nombre" class="fw-semibold">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Nombre del Grupo" required>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre del Grupo" >
         </div>
         <div class="campo descripcion">
             <label for="descripcion" class="fw-semibold">Descripcion</label>
@@ -15,7 +17,7 @@
         </div>
         <div class="campo">
             <label for="categorias" class="fw-semibold">Categoria:</label>
-            <select name="categorias" id="categorias" required>
+            <select name="categorias" id="categorias">
                 <option value="" selected disabled>--- Selecciona una opción ---</option>
                 <% categorias.forEach(function (categoria) {%>
                     <option value="<%= categoria.id %>"><%= categoria.nombre%></option>
