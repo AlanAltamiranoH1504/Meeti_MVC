@@ -51,6 +51,9 @@ app.use(csurf({cookie: true}));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
+//Habilitiacion de cookies
+app.use(cookieParser());
+
 //Habilitacion de carpeta y archivos public
 app.use(express.static(path.join(__dirname, "public")));
 

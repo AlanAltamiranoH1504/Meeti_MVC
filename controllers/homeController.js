@@ -1,6 +1,7 @@
 const home = (req, res) => {
-    res.render("home", {
-        nombrePagina: "Inicio"
+    res.render("iniciarSesion", {
+        nombrePagina: "Iniciar Sesión",
+        csrf: req.csrfToken()
     });
 }
 
