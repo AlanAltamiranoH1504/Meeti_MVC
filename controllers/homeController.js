@@ -5,6 +5,14 @@ const home = (req, res) => {
     });
 }
 
+const panelDeAdministracion = (req, res) => {
+    res.render("admin/panel", {
+        nombrePagina: "Administracion",
+        csrf: req.csrfToken()
+    });
+}
+
 export {
-    home
+    home,
+    panelDeAdministracion
 }

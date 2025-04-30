@@ -206,11 +206,10 @@ const iniciarSesion = async (req, res) => {
         const response = {
             msg:"Inicio de sesion correcto",
             status: 200,
-            cookieStatus : "Cookie guardada",
-            jwtCookie
+            cookieStatus : "Cookie guardada"
         };
-
         return res.status(200).json(response);
+        // res.redirect("/panel-administracion");
     } catch (error) {
         const response = {
             msg: "Error en servidor",
