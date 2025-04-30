@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
             divAlertas.appendChild(parrafoAlerta);
             setTimeout(() => {
                 divAlertas.innerHTML = "";
-                window.location.href = "/panel-administracion";
+                window.location.href = "/administracion/panel-administracion";
             }, 1000);
 
         } else{

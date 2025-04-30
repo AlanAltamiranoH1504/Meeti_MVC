@@ -217,8 +217,6 @@ const iniciarSesion = async (req, res) => {
         }
         return res.status(500).json(response);
     }
-
-
 }
 
 export {

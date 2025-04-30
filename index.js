@@ -19,6 +19,7 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 import authRoutes from "./routes/authRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import conexion from "./config/db.js";
 
@@ -62,7 +63,10 @@ app.use('/static', express.static(path.join(__dirname, 'node_modules')));
 
 //Rutas para auth
 app.use("/auth", authRoutes);
+//Rutas base
 app.use("/", homeRoutes);
+//Rutas admin
+app.use("/administracion", adminRoutes);
 
 //Ruta para errores
 app.use((req, res, next) => {

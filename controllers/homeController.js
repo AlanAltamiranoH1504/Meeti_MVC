@@ -1,3 +1,4 @@
+import {userInSession} from "../helpers/UserInSession.js";
 const home = (req, res) => {
     res.render("iniciarSesion", {
         nombrePagina: "Iniciar Sesión",
@@ -5,14 +6,6 @@ const home = (req, res) => {
     });
 }
 
-const panelDeAdministracion = (req, res) => {
-    res.render("admin/panel", {
-        nombrePagina: "Administracion",
-        csrf: req.csrfToken()
-    });
-}
-
 export {
-    home,
-    panelDeAdministracion
+    home
 }
