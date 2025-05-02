@@ -5,20 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function peticionSaveNuevoGrupo(e) {
         e.preventDefault();
         const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-        const inputNombre = document.querySelector("#nombre").value;
-        const inputDescripcion = document.querySelector("#x").value;
-        const inputCategorias = document.querySelector("#categorias").value;
-        const inputSitioWeb = document.querySelector("#sitio-web").value;
-
         const formNuevoGrupo = document.querySelector("#formNuevoGrupo");
         const formData = new FormData(formNuevoGrupo);
 
-        const bodyRequest = {
-            nombre: inputNombre,
-            descripcion: inputDescripcion,
-            categoria: inputCategorias,
-            url: inputSitioWeb,
-        }
         fetch("/administracion/save-grupo", {
             method: "POST",
             headers: {
@@ -28,12 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log(data)
-            // if (data.status === "200") {
-            //     mostrarAlertas("success", data.msg, null);
-            // } else {
-            //     mostrarAlertas("error", "bad request", data);
-            // }
+            if (Array.isArray(data)){
+                mostrarAlertas("error", "bad request", data);
+            } else{
+                mostrarAlertas("success", "Grupo Creado Correctamente", null);
+            }
         }).catch((error) => {
             console.log("Error en peticion al backend");
             console.log(error.message);
@@ -41,12 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function mostrarAlertas(tipo, msg, errores) {
-        limpiarInputs();
+        // limpiarInputs();
         const divAlertas = document.querySelector("#divAlertas");
         divAlertas.innerHTML = "";
+
         if (tipo === "success") {
             const parrafoAlerta = document.createElement("p");
-            parrafoAlerta.textContent = msg;
+            parrafoAlerta.textContent = "Grupo creado correctamente";
             parrafoAlerta.classList.add("bg-success", "px-3", "py-2", "fw-semibold", "text-center", "rounded", "text-uppercase", "fs-5", "text-white");
             divAlertas.appendChild(parrafoAlerta);
             setTimeout(() => {
