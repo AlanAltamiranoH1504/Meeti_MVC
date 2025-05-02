@@ -3,6 +3,15 @@ import {Grupo} from "../models/index.js";
 import {userInSession} from "../helpers/UserInSession.js";
 import * as url from "node:url";
 
+const listadoGrupos = async (req, res) => {
+    try{
+        const grupos = await Grupo.findAll();
+        return res.status(200).json(grupos);
+    }catch (e){
+        return res.status(500).json({msg: e.message});
+    }
+}
+
 const formNuevoGrupo = async (req, res) => {
     const categoriasFindAll = await Categoria.findAll();
     res.render("admin/grupos/formNuevoGrupo", {
@@ -102,6 +111,7 @@ const eliminarGrupo = async (req, res) => {
 }
 
 export {
+    listadoGrupos,
     formNuevoGrupo,
     saveGrupo,
     eliminarGrupo
