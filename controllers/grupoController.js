@@ -81,7 +81,28 @@ const saveGrupo = async (req, res) => {
     }
 }
 
+const eliminarGrupo = async (req, res) => {
+    const {id} = req.body;
+    try {
+        const deletedGrupo = await Grupo.findByPk(id);
+        if (!deletedGrupo) {
+            const response = {
+                msg: "El grupo no existe"
+            }
+            return res.status(404).json(response);
+        }
+        deletedGrupo.destroy();
+        return res.status(200).json({msg: "Grupo eliminado correctamente"});
+    }catch (error){
+        const response = {
+            msg: error.message
+        }
+        return res.status(500).json(response);
+    }
+}
+
 export {
     formNuevoGrupo,
-    saveGrupo
+    saveGrupo,
+    eliminarGrupo
 }

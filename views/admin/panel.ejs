@@ -41,17 +41,19 @@
 
     <div class="seccion-admin">
         <h2>Tus Grupos</h2>
-        <ul>
+        <ul id="listaGrupos">
+            <% grupos.forEach(function (grupo) {%>
             <li>
                 <div class="informacion-admin">
-                    <h3>E-Commerce en México</h3>
+                    <h3><%= grupo.nombre%></h3>
                 </div>
                 <div class="acciones contenedor-botones">
-                    <a href="" class="btnCodigo btn-verde">Editar</a>
+                    <a href="/administracion/editar/<%= grupo.id%>" class="btnCodigo btn-verde">Editar</a>
                     <a href="" class="btnCodigo btn-azul2">Asistentes</a>
-                    <a href="" class="btnCodigo btn-rojo">Eliminar</a>
+                    <button data-id="<%= grupo.id%>" id="btnEliminar" class="btnCodigo btn-rojo">Eliminar</button>
                 </div>
             </li>
+            <% })%>
         </ul>
     </div>
 </main>
