@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputCategorias = document.querySelector("#categorias").value;
         const inputSitioWeb = document.querySelector("#sitio-web").value;
 
+        const formNuevoGrupo = document.querySelector("#formNuevoGrupo");
+        const formData = new FormData(formNuevoGrupo);
+
         const bodyRequest = {
             nombre: inputNombre,
             descripcion: inputDescripcion,
@@ -19,18 +22,18 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch("/administracion/save-grupo", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
                 "csrf-token": token
             },
-            body: JSON.stringify(bodyRequest)
+            body: formData
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            if (data.status === "200") {
-                mostrarAlertas("success", data.msg, null);
-            } else {
-                mostrarAlertas("error", "bad request", data);
-            }
+            console.log(data)
+            // if (data.status === "200") {
+            //     mostrarAlertas("success", data.msg, null);
+            // } else {
+            //     mostrarAlertas("error", "bad request", data);
+            // }
         }).catch((error) => {
             console.log("Error en peticion al backend");
             console.log(error.message);
