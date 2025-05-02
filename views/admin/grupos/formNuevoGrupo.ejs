@@ -6,18 +6,18 @@
 
         <div class="campo">
             <label for="nombre" class="fw-semibold">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Nombre del Grupo" >
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre del Grupo" required >
         </div>
         <div class="campo descripcion">
             <label for="descripcion" class="fw-semibold">Descripcion</label>
             <div class="contenedor-editor">
-                <input type="hidden" id="x" name="descripcion">
+                <input type="hidden" id="x" name="descripcion" required>
                 <trix-editor input="x"></trix-editor>
             </div>
         </div>
         <div class="campo">
             <label for="categorias" class="fw-semibold">Categoria:</label>
-            <select name="categorias" id="categorias">
+            <select name="categorias" id="categorias" required>
                 <option value="" selected disabled>--- Selecciona una opción ---</option>
                 <% categorias.forEach(function (categoria) {%>
                     <option value="<%= categoria.id %>"><%= categoria.nombre%></option>

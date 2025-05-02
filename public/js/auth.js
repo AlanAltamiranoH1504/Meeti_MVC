@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            if (data.status === 400){
-                alertas(data.status, "Errores", data.errores)
-            } else if(data.status === 200) {
-                alertas(data.status,"Usuario registrado correctamente. Confirma en tu email", data.errores)
+            if (data.errors){
+                alertas(400, "errores", data.errors);
+            }else{
+                alertas(200, "Confirma tu usuario en tu E-Mail", null)
             }
         }).catch((error) => {
             console.log(error)
