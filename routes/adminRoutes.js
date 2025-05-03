@@ -6,14 +6,17 @@ import {
 } from "../controllers/adminController.js";
 import {
     listadoGrupos,
-    formNuevoGrupo, saveGrupo, eliminarGrupo
+    formNuevoGrupo, saveGrupo, eliminarGrupo, findGrupoById, actualizacionGrupo
 } from "../controllers/grupoController.js";
 import upload from "../Middlewares/MulterImgs.js";
 
+//Rutas de grupos
 router.get("/panel-administracion", protegerRuta, panelDeAdministracion);
 router.get("/grupos", protegerRuta, listadoGrupos);
 router.get("/nuevo-grupo", protegerRuta, formNuevoGrupo);
 router.post("/save-grupo", protegerRuta, upload.single("imagen"), saveGrupo);
+router.post("/findById", protegerRuta, findGrupoById);
+router.post("/actualizacion", protegerRuta, upload.single("imagen"), actualizacionGrupo);
 router.delete("/eliminar", protegerRuta, eliminarGrupo);
 
 

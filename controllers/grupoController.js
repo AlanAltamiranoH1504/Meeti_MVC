@@ -2,6 +2,7 @@ import Categoria from "../models/Categoria.js";
 import {Grupo} from "../models/index.js";
 import {userInSession} from "../helpers/UserInSession.js";
 import * as url from "node:url";
+import {raw} from "express";
 
 const listadoGrupos = async (req, res) => {
     try{
@@ -21,6 +22,34 @@ const formNuevoGrupo = async (req, res) => {
     });
 }
 
+const findGrupoById = async (req, res) => {
+    const {id} = req.body;
+    const foundedGrupo = await Grupo.findByPk(id);
+    return res.status(200).json(foundedGrupo);
+}
+
+const actualizacionGrupo = async (req, res) => {
+    const {idGrupo, nombre, descripcion, categorias, sitio_web} = req.body;
+    const file = req.file;
+
+    try {
+        const updatedGrupo = await Grupo.findByPk(idGrupo);
+        updatedGrupo.nombre = nombre;
+        updatedGrupo.descripcion = descripcion;
+        updatedGrupo.categoria_id = categorias;
+        updatedGrupo.url = sitio_web;
+        updatedGrupo.imagen = file.filename;
+        await updatedGrupo.save();
+        return res.status(200).json({
+            msg: "Grupo Actualizado correctamente"
+        });
+    }catch (error){
+        const response = {
+            msg: error.message,
+        }
+        return  res.status(500).json(response);
+    }
+}
 
 const saveGrupo = async (req, res) => {
     const {nombre, descripcion, categorias, sitio_web} = req.body;
@@ -114,5 +143,7 @@ export {
     listadoGrupos,
     formNuevoGrupo,
     saveGrupo,
-    eliminarGrupo
+    actualizacionGrupo,
+    eliminarGrupo,
+    findGrupoById
 }

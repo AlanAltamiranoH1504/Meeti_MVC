@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    //Funciones base
     listadoGrupos();
 
     function listadoGrupos(){
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <h3>${grupo.nombre}</h3>
                     </div>
                     <div class="acciones contenedor-botones">
-                        <a href=#" class="btnCodigo btn-verde">Editar</a>
+                        <a href="#" data-id="${grupo.id}" id="btnEditar" class="btnCodigo btn-verde">Editar</a>
                         <a href="" class="btnCodigo btn-azul2">Asistentes</a>
                         <button data-id="${grupo.id}" id="btnEliminar" class="btnCodigo btn-rojo">Eliminar</button>
                     </div>
@@ -45,22 +46,52 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
+    //Selectores
     const listaGrupos = document.querySelector("#listaGrupos");
+    const formActualizacionGrupo = document.querySelector("#formActualizacionGrupo");
 
+    //Eventos
     if (listaGrupos) {
         listaGrupos.addEventListener("click", identificadorBtn)
     }else{
         console.log("El btn no existe");
     }
+    formActualizacionGrupo.addEventListener("submit", sendActualizacionGrupo);
 
+    //Funciones
     function identificadorBtn(e){
         e.preventDefault();
         const tipoBtn = e.target.id;
         const btn = e.target;
         if (tipoBtn === "btnEliminar"){
             peticionDelete(btn.getAttribute("data-id"));
+        } else if(tipoBtn === "btnEditar"){
+            mostrarModalEdicion(btn.getAttribute("data-id"));
         }
+    }
+
+    async function mostrarModalEdicion(id){
+        const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+        await fetch("/administracion/findById", {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json",
+                "csrf-token":token
+            },
+            body: JSON.stringify({id:id})
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            const modalEdicion = new bootstrap.Modal(document.querySelector("#modalEdicionGrupo"));
+            document.querySelector("#idGrupo").value = data.id;
+            document.querySelector("#nombre").value = data.nombre;
+            document.getElementsByName("descripcion").value = data.descripcion;
+            document.querySelector("#sitio_web").value = data.url;
+            modalEdicion.show();
+        }).catch((error) => {
+            console.log("Error en peticion de busqueda");
+            console.log(error.message);
+        })
     }
 
     function peticionDelete(id){
@@ -84,5 +115,45 @@ document.addEventListener("DOMContentLoaded", () => {
         }).catch((error) => {
             console.log(e.message);
         })
+    }
+
+    function sendActualizacionGrupo(e){
+        e.preventDefault();
+        const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+        const formActualzacionGrupo = document.querySelector("#formActualizacionGrupo");
+        const formaData = new FormData(formActualzacionGrupo);
+
+        fetch("/administracion/actualizacion", {
+            method: "POST",
+            headers: {
+                "csrf-token": token
+            },
+            body: formaData
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            listadoGrupos();
+            alertas("formUpdateGrupo", "success", data.msg);
+        }).catch((error)  => {
+            console.log(e.message);
+        })
+    }
+
+    function alertas(lugar, tipo, menssaje){
+        if (lugar === "formUpdateGrupo"){
+            const divAlertas = document.querySelector("#divAlertasUpdate");
+            divAlertas.innerHTML = "";
+            if (tipo === "success") {
+                const parrafoAlerta = document.createElement("p");
+                const modalEdicion = bootstrap.Modal.getInstance(document.querySelector("#modalEdicionGrupo"));
+                parrafoAlerta.textContent = menssaje;
+                parrafoAlerta.classList.add("bg-success", "text-white", "text-center", "text-uppercase", "fs-5", "fw-semibold", "px-3", "py-2", "rounded")
+                divAlertas.appendChild(parrafoAlerta);
+                setTimeout(() => {
+                    divAlertas.innerHTML = ""
+                    modalEdicion.hide();
+                }, 2500);
+            }
+        }
     }
 })
