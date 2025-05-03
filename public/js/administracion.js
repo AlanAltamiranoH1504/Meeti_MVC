@@ -85,7 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const modalEdicion = new bootstrap.Modal(document.querySelector("#modalEdicionGrupo"));
             document.querySelector("#idGrupo").value = data.id;
             document.querySelector("#nombre").value = data.nombre;
-            document.getElementsByName("descripcion").value = data.descripcion;
+            // document.getElementsByName("descripcion").value = data.descripcion;
+            document.querySelector("#x").value = data.descripcion;
             document.querySelector("#sitio_web").value = data.url;
             modalEdicion.show();
         }).catch((error) => {
@@ -135,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
             listadoGrupos();
             alertas("formUpdateGrupo", "success", data.msg);
         }).catch((error)  => {
-            console.log(e.message);
+            console.log(error.message);
         })
     }
 

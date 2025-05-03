@@ -1,8 +1,13 @@
 import Categoria from "../models/Categoria.js";
 import {Grupo} from "../models/index.js";
 import {userInSession} from "../helpers/UserInSession.js";
-import * as url from "node:url";
-import {raw} from "express";
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from "fs";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 
 const listadoGrupos = async (req, res) => {
     const usuarioEnSesion = await userInSession(req.cookies.token_meeti);
@@ -35,6 +40,11 @@ const actualizacionGrupo = async (req, res) => {
 
     try {
         const updatedGrupo = await Grupo.findByPk(idGrupo);
+        const nombreImagenAntigua = updatedGrupo.imagen;
+        const direccionImagenAntigua = path.join(__dirname, "../public/uploads/", nombreImagenAntigua);
+        fs.unlink(direccionImagenAntigua, (error) => {
+            console.log("ERROR EN ELIMINIACION DE IMG");
+        })
         updatedGrupo.nombre = nombre;
         updatedGrupo.descripcion = descripcion;
         updatedGrupo.categoria_id = categorias;
@@ -42,7 +52,8 @@ const actualizacionGrupo = async (req, res) => {
         updatedGrupo.imagen = file.filename;
         await updatedGrupo.save();
         return res.status(200).json({
-            msg: "Grupo Actualizado correctamente"
+            msg: "Grupo Actualizado correctamente",
+            direccionImagenAntigua
         });
     }catch (error){
         const response = {
@@ -124,14 +135,20 @@ const eliminarGrupo = async (req, res) => {
     const {id} = req.body;
     try {
         const deletedGrupo = await Grupo.findByPk(id);
+        //Eliminicacion de imagenes
         if (!deletedGrupo) {
             const response = {
                 msg: "El grupo no existe"
             }
             return res.status(404).json(response);
         }
+        const nombreImagen = deletedGrupo.imagen;
+        const rutaImagen = path.join(__dirname, "../public/uploads/", deletedGrupo.imagen);
+        fs.unlink(rutaImagen, (error) => {
+            console.log("ERROR EN ELIMINIACION DE IMG: "  + error);
+        });
         deletedGrupo.destroy();
-        return res.status(200).json({msg: "Grupo eliminado correctamente"});
+        return res.status(200).json({msg: "Grupo eliminado correctamente", url: rutaImagen});
     }catch (error){
         const response = {
             msg: error.message
