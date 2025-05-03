@@ -5,8 +5,9 @@ import * as url from "node:url";
 import {raw} from "express";
 
 const listadoGrupos = async (req, res) => {
+    const usuarioEnSesion = await userInSession(req.cookies.token_meeti);
     try{
-        const grupos = await Grupo.findAll();
+        const grupos = await Grupo.findAll({where: {usuario_id: usuarioEnSesion}});
         return res.status(200).json(grupos);
     }catch (e){
         return res.status(500).json({msg: e.message});

@@ -34,12 +34,15 @@ const registroDB = async (req, res) => {
     }
 
     try {
+        const token = tokenGeneral();
         const passwordHash = await bcrypt.hash(password, 10);
         const savedUsuario = await Usuario.create({
             email,
             nombre,
-            password: passwordHash
+            password: passwordHash,
+            token_usuario: token
         });
+        confirmacionEmail(nombre, email, token);
         return res.status(200).json({msg: "Confirma tu cuenta en tu E-mail"});
     }catch (e) {
         return res.status(500).json({msg: e.message});
