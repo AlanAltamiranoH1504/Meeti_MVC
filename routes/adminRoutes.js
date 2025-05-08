@@ -8,6 +8,7 @@ import {
     listadoGrupos,
     formNuevoGrupo, saveGrupo, eliminarGrupo, findGrupoById, actualizacionGrupo
 } from "../controllers/grupoController.js";
+import {formNuevoMeeti} from "../controllers/meetiController.js";
 import upload from "../Middlewares/MulterImgs.js";
 
 //Rutas de grupos
@@ -18,6 +19,9 @@ router.post("/save-grupo", protegerRuta, upload.single("imagen"), saveGrupo);
 router.post("/findById", protegerRuta, findGrupoById);
 router.post("/actualizacion", protegerRuta, upload.single("imagen"), actualizacionGrupo);
 router.delete("/eliminar", protegerRuta, eliminarGrupo);
+
+//Rutas de meetis
+router.get("/nuevo-meeti", protegerRuta, formNuevoMeeti);
 
 
 export default router;
