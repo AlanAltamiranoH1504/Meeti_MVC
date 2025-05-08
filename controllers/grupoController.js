@@ -7,8 +7,6 @@ import fs from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-
 const listadoGrupos = async (req, res) => {
     const usuarioEnSesion = await userInSession(req.cookies.token_meeti);
     try{

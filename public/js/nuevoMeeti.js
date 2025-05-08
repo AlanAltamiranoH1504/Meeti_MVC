@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log(data)
             if (data.length >= 1){
                 llenadoGrupos(data);
             }else{
