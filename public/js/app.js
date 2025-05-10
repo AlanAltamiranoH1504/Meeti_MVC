@@ -32,6 +32,7 @@ function buscarDireccion(e) {
 
             const location = resultado[0].bounds[0];
             geoCodeService.reverse().latlng(location, 15).run(function (error, result){
+                llenarInputs(result);
                 if (error) {
                     console.error("Error en la geocodificación inversa:", error);
                     return;
@@ -58,10 +59,20 @@ function buscarDireccion(e) {
                     geoCodeService.reverse().latlng(posicion, 15).run(function (error, result){
                         //Asignancion de valores al PopUp del Marker
                         marker.bindPopup(result.address.LongLabel)
-                    })
-
+                        llenarInputs(result);
+                    });
                 });
             });
         });
     }
+}
+
+function llenarInputs(resultado){
+    console.log(resultado);
+    document.querySelector("#direccion").value = resultado.address.Address || "";
+    document.querySelector("#ciudad").value = resultado.address.City || "";
+    document.querySelector("#estado").value = resultado.address.Region || "";
+    document.querySelector("#pais").value = resultado.address.CountryCode || "";
+    document.querySelector("#lat").value = resultado.latlng.lat || "";
+    document.querySelector("#lng").value = resultado.latlng.lng || "";
 }
