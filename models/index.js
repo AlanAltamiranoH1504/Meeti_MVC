@@ -5,6 +5,7 @@
 import Usuario from "./Usuario.js";
 import Categoria from "./Categoria.js";
 import Grupo from "./Grupo.js";
+import Meeti from "./Meeti.js";
 
 //Un grupo pertenece a una categoria
 Grupo.belongsTo(Categoria,{
@@ -26,6 +27,29 @@ Grupo.belongsTo(Usuario, {
 //Un usuario puede tener muchos grupos
 Usuario.hasMany(Grupo, {
     foreignKey: "usuario_id",
+});
+
+
+//Un Meeti pertenece un grupo
+Meeti.belongsTo(Grupo, {
+    foreignKey: "grupo_id",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
+});
+//Un grupo puede tener muchos meetis
+Grupo.hasMany(Meeti,{
+    foreignKey: "grupo_id"
+});
+
+//Un meeti pertenece a un usuario
+Meeti.belongsTo(Usuario,{
+    foreignKey: "usuario_id",
+    onUpdate: "CASCADE",
+    onDelete: "CASCCADE"
+});
+//Un usuario puede tener muchos meetis
+Usuario.hasMany(Meeti, {
+    foreignKey: "usuario_id"
 });
 
 export {

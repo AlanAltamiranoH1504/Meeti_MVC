@@ -1,9 +1,11 @@
 <main class="contenedor contenedor-formularios">
     <h1><%- nombrePagina %></h1>
-    <form class="default-form" action="/nuevo-meeti" method="POST">
+    <form id="formuNuevoMeeti" class="default-form" action="/nuevo-meeti" method="POST">
         <legend>Sobre el Meeti</legend>
 
         <div id="alertas"></div>
+
+        <div id="divAlertas"></div>
 
         <div class="campo">
             <label>Grupo</label>
@@ -13,25 +15,25 @@
         </div>
         <div class="campo">
             <label>Titulo</label>
-            <input type="text" name="titulo" placeholder="Titulo Meeti">
+            <input type="text" id="titulo" name="titulo" placeholder="Titulo Meeti">
         </div>
         <div class="campo">
             <label>Invitado</label>
-            <input type="text" name="invitado" placeholder="Nombre Invitado o Ponente (si aplica)">
+            <input type="text" id="invitado" name="invitado" placeholder="Nombre Invitado o Ponente (si aplica)">
         </div>
         <div class="columnas-2 grid">
             <div class="campo">
                 <label>Fecha</label>
-                <input type="date" name="fecha" placeholder="Fecha Meeti">
+                <input type="date" id="fecha" name="fecha" placeholder="Fecha Meeti">
             </div>
             <div class="campo">
                 <label>Hora</label>
-                <input type="time" name="hora" placeholder="Hora Meeti">
+                <input type="time" id="hora" name="hora" placeholder="Hora Meeti">
             </div>
         </div>
         <div class="campo">
             <label>Cupo</label>
-            <input type="number" min="1" name="cupo" placeholder="Cupo Meeti (si aplica)">
+            <input type="number" min="1" id="cupo" name="cupo" placeholder="Cupo Meeti (si aplica)">
         </div>
         <div class="campo descripcion">
             <label>Descripción</label>

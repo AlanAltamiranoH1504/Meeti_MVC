@@ -8,8 +8,9 @@ import {
     listadoGrupos,
     formNuevoGrupo, saveGrupo, eliminarGrupo, findGrupoById, actualizacionGrupo
 } from "../controllers/grupoController.js";
-import {formNuevoMeeti} from "../controllers/meetiController.js";
+import {formNuevoMeeti, saveNuevoMeeti} from "../controllers/meetiController.js";
 import upload from "../Middlewares/MulterImgs.js";
+import {requestCreateMeeti} from "../Middlewares/RequestFroms.js";
 
 //Rutas de grupos
 router.get("/panel-administracion", protegerRuta, panelDeAdministracion);
@@ -22,6 +23,7 @@ router.delete("/eliminar", protegerRuta, eliminarGrupo);
 
 //Rutas de meetis
 router.get("/nuevo-meeti", protegerRuta, formNuevoMeeti);
+router.post("/nuevo-meeti", protegerRuta, requestCreateMeeti, saveNuevoMeeti);
 
 
 export default router;
