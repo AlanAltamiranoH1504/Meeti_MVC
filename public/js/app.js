@@ -3,6 +3,7 @@ import {OpenStreetMapProvider} from "leaflet-geosearch";
 const lat = 19.2920813;
 const lng = -99.0468341;
 const map = L.map('mapa').setView([lat, lng], 15);
+let markers = new L.FeatureGroup().addTo(map)
 let marker;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -17,20 +18,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function buscarDireccion(e) {
     if (e.target.value.length > 8) {
-        //Utilizamos el provider
+        //Limpieza de PIN anterior
+        markers.clearLayers();
+
+        //Utilizamos el provider y GeoCoder
+        const geoCodeService = L.esri.Geocoding.geocodeService();
         const provider = new OpenStreetMapProvider();
         provider.search({query: e.target.value}).then((resultado) => {
-            //Mostrar el mapa en la ubicacion ingresada
-            map.setView(resultado[0].bounds[0], 15);
+            if (resultado.length === 0) {
+                alert("No se encontraron resultados para esa dirección");
+                return;
+            }
 
-            //Agregamos pin de ubicacion ingresada
-            marker = new L.marker(resultado[0].bounds[0], {
-                draggable: true, //Movimiento del PIN
-                autoPan: true
-            })
-                .addTo(map)
-                .bindPopup(resultado[0].label)
-                .openPopup();
-        })
+            const location = resultado[0].bounds[0];
+            geoCodeService.reverse().latlng(location, 15).run(function (error, result){
+                if (error) {
+                    console.error("Error en la geocodificación inversa:", error);
+                    return;
+                }
+
+                console.log(result);
+                map.setView(location, 15);
+                marker = new L.marker(location, {
+                    draggable: true,
+                    autoPan: true
+                })
+                    .addTo(map)
+                    .bindPopup(resultado[0].label)
+                    .openPopup();
+
+                markers.addLayer(marker);
+
+                marker.on("moveend", function (e) {
+                    marker = e.target;
+                    const posicion = marker.getLatLng();
+                    map.panTo(new L.LatLng(posicion.lat, posicion.lng));
+
+                    //Reverse geocoding cuando el usuario reubica el pin
+                    geoCodeService.reverse().latlng(posicion, 15).run(function (error, result){
+                        //Asignancion de valores al PopUp del Marker
+                        marker.bindPopup(result.address.LongLabel)
+                    })
+
+                });
+            });
+        });
     }
 }

@@ -1,0 +1,89 @@
+{
+  "name": "esri-leaflet-geocoder",
+  "description": "Esri Geocoding utility and search plugin for Leaflet.",
+  "version": "3.1.5",
+  "author": "Patrick Arlt <parlt@esri.com> (http://patrickarlt.com)",
+  "contributors": [
+    "Patrick Arlt <parlt@esri.com> (http://patrickarlt.com)",
+    "John Gravois <jgravois@esri.com> (https://johngravois.com)",
+    "Patrick McKinney",
+    "Jacob Wasilkowski",
+    "Gavin Rehkemper (https://gavinr.com)"
+  ],
+  "dependencies": {
+    "esri-leaflet": "^3.0.2",
+    "leaflet": "^1.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-terser": "^0.4.0",
+    "chai": "4.3.7",
+    "chokidar-cli": "^3.0.0",
+    "gh-release": "^7.0.2",
+    "http-server": "^14.1.1",
+    "imagemin": "^5.3.1",
+    "karma": "^6.4.1",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-coverage": "^2.2.0",
+    "karma-edgium-launcher": "github:matracey/karma-edgium-launcher",
+    "karma-firefox-launcher": "^2.1.2",
+    "karma-mocha": "^2.0.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-safari-launcher": "~1.0.0",
+    "karma-sinon-chai": "^2.0.2",
+    "karma-sourcemap-loader": "^0.3.8",
+    "mkdirp": "^1.0.4",
+    "mocha": "^10.2.0",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^2.79.1",
+    "sass": "^1.58.0",
+    "semistandard": "^14.2.3",
+    "sinon": "^15.0.1",
+    "sinon-chai": "3.7.0",
+    "snazzy": "^9.0.0"
+  },
+  "files": [
+    "src/**/*.js",
+    "dist/**"
+  ],
+  "homepage": "https://github.com/Esri/esri-leaflet-geocoder",
+  "jsnext:main": "src/EsriLeafletGeocoding.js",
+  "module": "src/EsriLeafletGeocoding.js",
+  "jspm": {
+    "registry": "npm",
+    "format": "es6",
+    "main": "src/EsriLeafletGeocoding.js"
+  },
+  "license": "Apache-2.0",
+  "main": "dist/esri-leaflet-geocoder-debug.js",
+  "browser": "dist/esri-leaflet-geocoder-debug.js",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Esri/esri-leaflet-geocoder.git"
+  },
+  "scripts": {
+    "prebuild": "mkdirp dist",
+    "build": "rollup -c profiles/debug.js && rollup -c profiles/production.js && npm run css && npm run img",
+    "css": "sass ./src/esri-leaflet-geocoder.css ./dist/esri-leaflet-geocoder.css --style compressed",
+    "img": "node scripts/build_images.js",
+    "lint": "semistandard | snazzy",
+    "fix": "semistandard --fix",
+    "release": "./scripts/release.sh",
+    "start-watch": "chokidar src -c \"npm run build\"",
+    "start": "run-p start-watch serve",
+    "serve": "http-server -p 5000 -c-1 -o",
+    "test": "npm run build && npm run lint && karma start"
+  },
+  "semistandard": {
+    "globals": [
+      "expect",
+      "L",
+      "XMLHttpRequest",
+      "sinon",
+      "xhr"
+    ]
+  },
+  "style": "./dist/esri-leaflet-geocoder.css"
+}
