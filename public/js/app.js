@@ -26,7 +26,7 @@ function buscarDireccion(e) {
         const provider = new OpenStreetMapProvider();
         provider.search({query: e.target.value}).then((resultado) => {
             if (resultado.length === 0) {
-                alert("No se encontraron resultados para esa dirección");
+                // alert("No se encontraron resultados para esa dirección");
                 return;
             }
 
@@ -38,7 +38,6 @@ function buscarDireccion(e) {
                     return;
                 }
 
-                console.log(result);
                 map.setView(location, 15);
                 marker = new L.marker(location, {
                     draggable: true,
