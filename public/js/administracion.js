@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //Funciones base
     listadoGrupos();
+    listadoMeetis();
 
     function listadoGrupos(){
         const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
@@ -17,6 +18,51 @@ document.addEventListener("DOMContentLoaded", () => {
         }).catch((error) =>{
             console.log("Error en peticion de listado")
             console.log(error.message);
+        })
+    }
+
+    function listadoMeetis(){
+        fetch("/administracion/findAllMeetis", {
+            method: "GET"
+        }).then((response) => {
+            return response.json();
+        }).then((data) =>{
+            console.log(data)
+            if (data.meetis && data.meetis.length > 0){
+                renderListadoMetis(data);
+            }else {
+                alertas("divAlertasMeetis", "error", "No tienes Meeti's creados");
+            }
+        }).catch((error) =>{
+            console.log("Error en peticion de listado de meetis");
+            console.log(error.message);
+        })
+    }
+
+    function renderListadoMetis(meetis){
+        const ulMeetis = document.querySelector("#ulMeetis");
+        const meetisArray = meetis.meetis;
+        meetisArray.forEach((meeti) =>{
+            const liMeeti = document.createElement("li");
+            const fecha = new Date(meeti.fecha)
+            const formatoFecha = fecha.toLocaleDateString("es-MX", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            });
+            liMeeti.innerHTML = `
+                <div class="informacion-admin">
+                    <p class="fecha">${formatoFecha}</p>
+                    <h3>${meeti.titulo}</h3>
+                    <small>${meeti.asitentes}</small>
+                </div>
+                <div class="acciones contenedor-botones">
+                    <a href="#" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
+                    <a href="#" class="btnCodigo btn-azul2" style="text-decoration: none">Asistentes</a>
+                    <a href="#" class="btnCodigo btn-rojo" style="text-decoration: none">Eliminar</a>
+                </div>
+            `;
+            ulMeetis.appendChild(liMeeti);
         })
     }
 
@@ -155,6 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     modalEdicion.hide();
                 }, 2500);
             }
+        } else if (lugar === "divAlertasMeetis"){
+            document.querySelector("#divAlertasMeetis").classList.remove("d-none");
         }
     }
 })

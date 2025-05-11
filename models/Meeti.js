@@ -8,7 +8,8 @@ const meeti = conexion.define("Meeti", {
     },
     invitado: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
+        default: null
     },
     fecha: {
         type: Sequelize.DATE,
@@ -16,7 +17,7 @@ const meeti = conexion.define("Meeti", {
     },
     hora: {
         type: Sequelize.TIME,
-        allowNull: false
+        default: null
     },
     cupo: {
         type: Sequelize.INTEGER,
@@ -49,6 +50,10 @@ const meeti = conexion.define("Meeti", {
     lng: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    interesados: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER),
+        defaultValue: []
     }
 }, {
     tableName: "meetis",
