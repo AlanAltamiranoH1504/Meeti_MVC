@@ -5,7 +5,6 @@ const panelDeAdministracion = async (req, res) => {
     const nombre = userInSession(req.cookies.token_meeti);
     const categorias = await Categoria.findAll();
 
-
     res.render("admin/panel", {
         nombrePagina: "Panel de Administracion",
         csrf: req.csrfToken(),

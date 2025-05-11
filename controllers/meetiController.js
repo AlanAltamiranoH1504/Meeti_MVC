@@ -1,6 +1,19 @@
 import {validationResult} from "express-validator";
 import {userInSession} from "../helpers/UserInSession.js";
 import Meeti from "../models/Meeti.js";
+import meeti from "../models/Meeti.js";
+
+const findAllMetis = async (req, res) => {
+    const usuarioEnSesion = await userInSession(req.cookies.token_meeti);
+    try{
+        const meetis = await Meeti.findAll({where: {usuario_id: usuarioEnSesion}});
+        return res.status(200).json({
+            meetis
+        });
+    }catch (error){
+        return res.status(500).json({msg: error.message});
+    }
+}
 
 const formNuevoMeeti = (req, res) => {
     res.render("admin/meetis/formNuevoMeeti", {
@@ -25,10 +38,10 @@ const saveNuevoMeeti = async (req, res) => {
 
         const createdMeeti = await Meeti.create({
             titulo,
-            invitado,
+            invitado: invitado === "" ? null : invitado,
             fecha,
             hora,
-            cupo,
+            cupo: cupo === "" ? null : cupo,
             descripcion,
             direccion,
             ciudad,
@@ -49,7 +62,21 @@ const saveNuevoMeeti = async (req, res) => {
     }
 }
 
+const eliminarMeeti = async (req, res) =>{
+    const {id} = req.body;
+    try{
+        const deletedMeeti = await Meeti.findByPk(id);
+        deletedMeeti.destroy();
+        deletedMeeti.save();
+        return res.status(200).json({msg: "Meeti eliminado"});
+    }catch (e) {
+        return res.status(500).json({msg: e.message});
+    }
+}
+
 export {
     formNuevoMeeti,
-    saveNuevoMeeti
+    saveNuevoMeeti,
+    findAllMetis,
+    eliminarMeeti
 }
