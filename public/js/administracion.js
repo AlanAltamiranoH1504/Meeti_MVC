@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     //Funciones base
     listadoGrupos();
     listadoMeetis();
@@ -159,40 +158,32 @@ document.addEventListener("DOMContentLoaded", () => {
         const bodyRequest = {
             id
         }
-
+        let endPoint;
         if (modelo === "grupo"){
-            fetch("/administracion/eliminar", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type":"application/json",
-                    "csrf-token": token
-                },
-                body: JSON.stringify(bodyRequest)
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                listadoGrupos();
-                console.log(data)
-            }).catch((error) => {
-                console.log(e.message);
-            })
+            endPoint = "/administracion/eliminar"
         }else if (modelo === "meeti"){
-            fetch("/administracion/delete-meeti", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": token
-                },
-                body: JSON.stringify(bodyRequest)
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                listadoMeetis();
-            }).catch((error) => {
-                console.log("Error en peticion al backend")
-                console.log(error.message);
-            })
+            endPoint = "/administracion/delete-meeti";
         }
+        fetch(`${endPoint}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type":"application/json",
+                "csrf-token": token
+            },
+            body: JSON.stringify(bodyRequest)
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            modelo === "grupo" ? listadoGrupos() : listadoMeetis();
+            Swal.fire({
+                title: "¡Exito!",
+                text: "Eliminado correctamente",
+                icon: "success",
+                confirmButtonText: "Aceptar"
+            });
+        }).catch((error) => {
+            console.log(e.message);
+        })
     }
 
     function sendActualizacionGrupo(e){
