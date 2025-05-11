@@ -1,6 +1,7 @@
 import {validationResult} from "express-validator";
 import {userInSession} from "../helpers/UserInSession.js";
 import Meeti from "../models/Meeti.js";
+import meeti from "../models/Meeti.js";
 
 const findAllMetis = async (req, res) => {
     const usuarioEnSesion = await userInSession(req.cookies.token_meeti);
@@ -61,8 +62,21 @@ const saveNuevoMeeti = async (req, res) => {
     }
 }
 
+const eliminarMeeti = async (req, res) =>{
+    const {id} = req.body;
+    try{
+        const deletedMeeti = await Meeti.findByPk(id);
+        deletedMeeti.destroy();
+        deletedMeeti.save();
+        return res.status(200).json({msg: "Meeti eliminado"});
+    }catch (e) {
+        return res.status(500).json({msg: e.message});
+    }
+}
+
 export {
     formNuevoMeeti,
     saveNuevoMeeti,
-    findAllMetis
+    findAllMetis,
+    eliminarMeeti
 }

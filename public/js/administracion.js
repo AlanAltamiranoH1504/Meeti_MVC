@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) =>{
-            console.log(data)
             if (data.meetis && data.meetis.length > 0){
                 renderListadoMetis(data);
             }else {
@@ -41,11 +40,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderListadoMetis(meetis){
         const ulMeetis = document.querySelector("#ulMeetis");
+        ulMeetis.innerHTML = "";
         const meetisArray = meetis.meetis;
         meetisArray.forEach((meeti) =>{
             const liMeeti = document.createElement("li");
             const fecha = new Date(meeti.fecha)
             const formatoFecha = fecha.toLocaleDateString("es-MX", {
+                weekday: "long",
                 year: "numeric",
                 month: "long",
                 day: "numeric"
@@ -57,9 +58,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <small>${meeti.asitentes}</small>
                 </div>
                 <div class="acciones contenedor-botones">
-                    <a href="#" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
-                    <a href="#" class="btnCodigo btn-azul2" style="text-decoration: none">Asistentes</a>
-                    <a href="#" class="btnCodigo btn-rojo" style="text-decoration: none">Eliminar</a>
+                    <a href="#" id="btnEditarMeeti" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
+                    <a href="#" id="btnAsistenteMeeti" data-id="${meeti.id}"  class="btnCodigo btn-azul2" style="text-decoration: none">Asistentes</a>
+                    <a href="#" id="btnEliminarMeeti" data-id="${meeti.id}" class="btnCodigo btn-rojo" style="text-decoration: none">Eliminar</a>
                 </div>
             `;
             ulMeetis.appendChild(liMeeti);
@@ -94,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //Selectores
     const listaGrupos = document.querySelector("#listaGrupos");
+    const listaMeetis = document.querySelector("#ulMeetis");
     const formActualizacionGrupo = document.querySelector("#formActualizacionGrupo");
 
     //Eventos
@@ -102,6 +104,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }else{
         console.log("El btn no existe");
     }
+    if (listaMeetis){
+        listaMeetis.addEventListener("click", identificadorBtn);
+    }
+
     formActualizacionGrupo.addEventListener("submit", sendActualizacionGrupo);
 
     //Funciones
@@ -109,10 +115,17 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const tipoBtn = e.target.id;
         const btn = e.target;
-        if (tipoBtn === "btnEliminar"){
-            peticionDelete(btn.getAttribute("data-id"));
-        } else if(tipoBtn === "btnEditar"){
-            mostrarModalEdicion(btn.getAttribute("data-id"));
+
+        switch (tipoBtn){
+            case "btnEliminar":
+                peticionDelete(btn.getAttribute("data-id"), "grupo");
+                break;
+            case "btnEditar":
+                mostrarModalEdicion(btn.getAttribute("data-id"));
+                break;
+            case "btnEliminarMeeti":
+                peticionDelete(btn.getAttribute("data-id"), "meeti");
+                break;
         }
     }
 
@@ -141,27 +154,45 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     }
 
-    function peticionDelete(id){
+    function peticionDelete(id, modelo){
         const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
         const bodyRequest = {
             id
         }
 
-        fetch("/administracion/eliminar", {
-            method: "DELETE",
-            headers: {
-                "Content-Type":"application/json",
-                "csrf-token": token
-            },
-            body: JSON.stringify(bodyRequest)
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            listadoGrupos();
-            console.log(data)
-        }).catch((error) => {
-            console.log(e.message);
-        })
+        if (modelo === "grupo"){
+            fetch("/administracion/eliminar", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type":"application/json",
+                    "csrf-token": token
+                },
+                body: JSON.stringify(bodyRequest)
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                listadoGrupos();
+                console.log(data)
+            }).catch((error) => {
+                console.log(e.message);
+            })
+        }else if (modelo === "meeti"){
+            fetch("/administracion/delete-meeti", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": token
+                },
+                body: JSON.stringify(bodyRequest)
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                listadoMeetis();
+            }).catch((error) => {
+                console.log("Error en peticion al backend")
+                console.log(error.message);
+            })
+        }
     }
 
     function sendActualizacionGrupo(e){
