@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <small>${meeti.asitentes}</small>
                 </div>
                 <div class="acciones contenedor-botones">
-                    <a href="#" id="btnEditarMeeti" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
+                    <a href="/administracion/editar-meeti/${meeti.id}" id="btnEditarMeeti" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
                     <a href="#" id="btnAsistenteMeeti" data-id="${meeti.id}"  class="btnCodigo btn-azul2" style="text-decoration: none">Asistentes</a>
                     <a href="#" id="btnEliminarMeeti" data-id="${meeti.id}" class="btnCodigo btn-rojo" style="text-decoration: none">Eliminar</a>
                 </div>
@@ -96,11 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="informacion-admin">
                     <p class="fecha">${formatoFecha}</p>
                     <h3>${meeti.titulo}</h3>
-                    <small>${meeti.asitentes}</small>
                 </div>
                 <div class="acciones contenedor-botones">
-                    <a href="#" id="btnEditarMeetiPasado" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
-                    <a href="#" id="btnAsistenteMeetiPasado" data-id="${meeti.id}"  class="btnCodigo btn-azul2" style="text-decoration: none">Asistentes</a>
+                    <a href="/administracion/editar-meeti/${meeti.id}" id="btnEditarMeetiPasado" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
                     <a href="#" id="btnEliminarMeetiPasado" data-id="${meeti.id}" class="btnCodigo btn-rojo" style="text-decoration: none">Eliminar</a>
                 </div>
             `;
@@ -162,6 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const tipoBtn = e.target.id;
         const btn = e.target;
+        const id = btn.getAttribute("data-id");
+        console.log(btn)
 
         switch (tipoBtn){
             case "btnEliminar":
@@ -169,6 +169,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case "btnEditar":
                 mostrarModalEdicion(btn.getAttribute("data-id"));
+                break;
+            case "btnEditarMeeti":
+                window.location.href = `/administracion/editar-meeti/${id}`;
                 break;
             case "btnEliminarMeeti":
                 peticionDelete(btn.getAttribute("data-id"), "meeti");
@@ -181,6 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function mostrarModalEdicion(id){
         const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
         await fetch("/administracion/findById", {
             method: "POST",
             headers: {

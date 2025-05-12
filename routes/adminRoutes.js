@@ -13,7 +13,7 @@ import {
     formNuevoMeeti,
     saveNuevoMeeti,
     eliminarMeeti,
-    findAllMeetisCompleted
+    findAllMeetisCompleted, formEditarMeeti
 } from "../controllers/meetiController.js";
 import upload from "../Middlewares/MulterImgs.js";
 import {requestCreateMeeti} from "../Middlewares/RequestFroms.js";
@@ -32,6 +32,7 @@ router.get("/findAllMeetis", protegerRuta, findAllMetis)
 router.get("/findAllMeetis-completed", protegerRuta, findAllMeetisCompleted);
 router.get("/nuevo-meeti", protegerRuta, formNuevoMeeti);
 router.post("/nuevo-meeti", protegerRuta, requestCreateMeeti, saveNuevoMeeti);
+router.get("/editar-meeti/:id", protegerRuta, formEditarMeeti);
 router.delete("/delete-meeti", protegerRuta, eliminarMeeti);
 
 

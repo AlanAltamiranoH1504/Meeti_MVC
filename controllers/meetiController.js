@@ -4,6 +4,7 @@ import Meeti from "../models/Meeti.js";
 import meeti from "../models/Meeti.js";
 import {Op} from "sequelize";
 import moment from "moment/moment.js";
+import {Categoria, Grupo} from "../models/index.js";
 
 const findAllMetis = async (req, res) => {
     const usuarioEnSesion = await userInSession(req.cookies.token_meeti);
@@ -14,7 +15,7 @@ const findAllMetis = async (req, res) => {
             where: {
                 usuario_id: usuarioEnSesion,
                 fecha: {
-                    [Op.gt]:nowDate
+                    [Op.gt]: nowDate
                 }
             }
         });
@@ -30,7 +31,7 @@ const findAllMeetisCompleted = async (req, res) => {
     const usuarioEnSesion = await userInSession(req.cookies.token_meeti);
     const nowDate = moment(new Date()).format("YYYY-MM-DD");
 
-    try{
+    try {
         const meetis = await Meeti.findAll({
             where: {
                 usuario_id: usuarioEnSesion,
@@ -42,7 +43,7 @@ const findAllMeetisCompleted = async (req, res) => {
         return res.status(200).json({
             meetis
         });
-    }catch (e) {
+    } catch (e) {
         return res.status(500).json({msg: e.message});
     }
 }
@@ -106,10 +107,44 @@ const eliminarMeeti = async (req, res) => {
     }
 }
 
+const formEditarMeeti = async (req, res) => {
+    const id = req.params.id;
+    const usuarioEnSesion = await userInSession(req.cookies.token_meeti);
+    const findGrupos = await Grupo.findAll({
+        where: {
+            usuario_id: usuarioEnSesion
+        }
+    });
+    const updatedMeeti = await Meeti.findByPk(id, {
+        include: {
+            model: Grupo, attributes: ["id", "nombre"]
+        }
+    });
+
+    if (updatedMeeti.usuario_id !== usuarioEnSesion) {
+        const nombre = userInSession(req.cookies.token_meeti);
+        const categorias = await Categoria.findAll();
+        return res.render("admin/panel", {
+            nombrePagina: "Panel de Administracion",
+            csrf: req.csrfToken(),
+            usuario: nombre,
+            categorias
+        });
+    }
+
+    res.render("admin/meetis/formEditarMeeti", {
+        nombrePagina: `Editar Meeti: ${updatedMeeti.titulo}`,
+        csrf: req.csrfToken(),
+        meeti: updatedMeeti,
+        grupos: findGrupos
+    });
+}
+
 export {
     formNuevoMeeti,
     saveNuevoMeeti,
     findAllMetis,
     eliminarMeeti,
-    findAllMeetisCompleted
+    findAllMeetisCompleted,
+    formEditarMeeti
 }
