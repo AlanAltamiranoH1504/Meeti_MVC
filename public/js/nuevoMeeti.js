@@ -72,8 +72,20 @@ document.addEventListener("DOMContentLoaded", () => {
             return response.json();
         }).then((data) => {
             if (data.msg){
-                mostrarAlertas("success", "Meeti Creado Correctamente!", null);
+                Swal.fire({
+                    title: "¡Exito!",
+                    text: "Meeti Creado Correctamente",
+                    icon: "success",
+                    confirmButtonText: "Ok!"
+                });
+                // mostrarAlertas("success", "Meeti Creado Correctamente!", null);
             }else{
+                Swal.fire({
+                    title: "¡Error!",
+                    text: "Error en la creacion de meti. Verifica el error en la parte superior",
+                    icon: "error",
+                    confirmButtonText: "Ok"
+                })
                 mostrarAlertas("error", "Errores", data);
             }
         }).catch((error) => {
@@ -112,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 setTimeout(() => {
                     divAlerta.innerHTML = ""
-                }, 5000)
+                }, 7000);
             }
         }else{
             const divAlerta = document.querySelector("#divAlertas");

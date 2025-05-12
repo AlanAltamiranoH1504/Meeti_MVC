@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) =>{
+            console.log(data)
             if (data.meetis && data.meetis.length > 0){
                 renderListadoMetis(data);
             }else {

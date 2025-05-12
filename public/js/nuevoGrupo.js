@@ -18,9 +18,21 @@ document.addEventListener("DOMContentLoaded", () => {
             return response.json();
         }).then((data) => {
             if (Array.isArray(data)){
+                Swal.fire({
+                    title: "¡Error!",
+                    text: "Error en la creacion de grupo. Verifica errores en la parte superior",
+                    icon: "error",
+                    confirmButtonText: "Ok"
+                });
                 mostrarAlertas("error", "bad request", data);
             } else{
-                mostrarAlertas("success", "Grupo Creado Correctamente", null);
+                Swal.fire({
+                    title: "¡Exito!",
+                    text: "Grupo Creado Correctamente",
+                    icon: "success",
+                    confirmButtonText: "Ok"
+                });
+                // mostrarAlertas("success", "Grupo Creado Correctamente", null);
             }
         }).catch((error) => {
             console.log("Error en peticion al backend");
@@ -50,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             setTimeout(() => {
                 divAlertas.innerHTML = "";
-            }, 4000);
+            }, 7000);
         }
     }
 
