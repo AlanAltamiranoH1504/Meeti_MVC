@@ -161,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const tipoBtn = e.target.id;
         const btn = e.target;
         const id = btn.getAttribute("data-id");
-        console.log(btn)
 
         switch (tipoBtn){
             case "btnEliminar":

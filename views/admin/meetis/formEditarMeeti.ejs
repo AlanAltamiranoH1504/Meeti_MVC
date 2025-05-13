@@ -1,6 +1,7 @@
 <main class="contenedor contenedor-formularios">
     <h1><%- nombrePagina %></h1>
-    <form id="formuNuevoMeeti" class="default-form" action="/nuevo-meeti" method="POST">
+    <form id="formuActualizacionMeeti" class="default-form" action="/nuevo-meeti" method="POST">
+        <input type="hidden" name="meeti_id" id="meeti_id" value="<%= meeti.id%>">
         <legend>Sobre el Meeti</legend>
 
         <div id="alertas"></div>
@@ -85,11 +86,11 @@
             <input type="text" id="lng" name="lng" readonly value="<%= meeti.lng%>">
         </div>
         <div class="campo enviar">
-            <input type="submit" class="btn btn-rosa" value="Crear Meeti">
+            <button type="submit" class="btnCodigo btn-rosaCodigo">Actualizar Meeti</button>
         </div>
     </form>
 </main>
 
-<!--<script src="/js/nuevoMeeti.js"></script>-->
+<script src="/js/actualizacionMeet.js"></script>
 
 

@@ -140,11 +140,50 @@ const formEditarMeeti = async (req, res) => {
     });
 }
 
+const updateMeeti = async (req, res) => {
+
+    //Validacion de errores
+    const errores = validationResult(req);
+    if (!errores.isEmpty()){
+        return res.status(400).json({errores: errores.array()});
+    }
+
+    //Desustruracion de request body
+    const {
+        id, titulo, grupo_id, invitado, fecha, hora, cupo, descripcion, direccion,
+        ciudad, estado, pais, lat, lng
+    } = req.body;
+
+
+    try{
+        const updatedMeeti = await Meeti.findByPk(id);
+        updatedMeeti.titulo = titulo;
+        updatedMeeti.invitado = invitado;
+        updatedMeeti.fecha = fecha;
+        updatedMeeti.hora = hora;
+        updatedMeeti.cupo = cupo;
+        updatedMeeti.descripcion = descripcion;
+        updatedMeeti.direccion = direccion;
+        updatedMeeti.ciudad = ciudad;
+        updatedMeeti.estado = estado;
+        updatedMeeti.pais = pais;
+        updatedMeeti.lat = lat;
+        updatedMeeti.lng = lng;
+        updatedMeeti.grupo_id = grupo_id;
+
+        await updatedMeeti.save();
+        return res.status(200).json({msg: "Meeti actualizado correctamente"});
+    }catch (e) {
+        return res.status(400).json({msg: e.message});
+    }
+}
+
 export {
     formNuevoMeeti,
     saveNuevoMeeti,
     findAllMetis,
     eliminarMeeti,
     findAllMeetisCompleted,
-    formEditarMeeti
+    formEditarMeeti,
+    updateMeeti
 }
