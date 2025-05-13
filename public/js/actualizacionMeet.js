@@ -1,36 +1,16 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () =>{
     //Selectores
-    const selectGrupos = document.querySelector("#selectGrupos");
-    const formuNuevoMeeti = document.querySelector("#formuNuevoMeeti");
+    const formuActualizacionMeeti = document.querySelector("#formuActualizacionMeeti");
 
     //Eventos
-    formuNuevoMeeti.addEventListener("submit", peticionNuevoMeeti);
-
-    //Llamado de funciones
-    llenadoSelectGrupos();
+    formuActualizacionMeeti.addEventListener("submit", peticionActualizacion);
 
     //Funciones
-    function llenadoSelectGrupos(){
-        fetch("/administracion/grupos", {
-            method: "GET"
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            if (data.length >= 1){
-                llenadoGrupos(data);
-            }else{
-                console.log("Alerta de sin grupos")
-                mostrarAlertas("error", "No tienes grupos creados", null);
-            }
-        }).catch((error) => {
-            console.log("Error en llenado de grupos");
-            console.log(error.message);
-        })
-    }
-
-    function peticionNuevoMeeti(e){
+    function peticionActualizacion(e){
         e.preventDefault();
         const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
+        const meetiId = document.querySelector("#meeti_id").value;
         const selectGrupo = document.querySelector("#selectGrupos").value;
         const inputTitulo = document.querySelector("#titulo").value;
         const inputInvitado = document.querySelector("#invitado").value;
@@ -46,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputLng = document.querySelector("#lng").value;
 
         const bodyRequest = {
+            id: meetiId,
             titulo: inputTitulo,
             grupo_id: selectGrupo,
             invitado: inputInvitado,
@@ -60,8 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             lat: inputLat,
             lng: inputLng
         }
-
-        fetch("/administracion/nuevo-meeti", {
+        fetch("/administracion/update-meeti", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -74,37 +54,28 @@ document.addEventListener("DOMContentLoaded", () => {
             if (data.msg){
                 Swal.fire({
                     title: "¡Exito!",
-                    text: "Meeti Creado Correctamente",
+                    text: "Meeti Actualizado Correctamente",
                     icon: "success",
                     confirmButtonText: "Ok!"
                 });
-                // mostrarAlertas("success", "Meeti Creado Correctamente!", null);
             }else{
                 Swal.fire({
                     title: "¡Error!",
-                    text: "Error en la creacion de meti. Verifica el error en la parte superior",
+                    text: "Error en la actualizacion de meti. Verifica el error en la parte superior",
                     icon: "error",
                     confirmButtonText: "Ok"
                 })
                 mostrarAlertas("error", "Errores", data);
             }
         }).catch((error) => {
-            console.log("Error en peticion al backend")
+            console.log("Error en peticion al backend para actualizacion de meeti");
             console.log(error.message);
-        })
-    }
-
-    function llenadoGrupos(grupos){
-        grupos.forEach((grupo) => {
-            const optionGrupo = document.createElement("option");
-            optionGrupo.setAttribute("value", grupo.id);
-            optionGrupo.textContent = grupo.nombre;
-            selectGrupos.appendChild(optionGrupo);
         })
     }
 
     function mostrarAlertas(tipo, mensaje, errores){
         const divAlertas = document.querySelector("#alertas");
+        divAlertas.innerHTML = "";
         if (tipo === "error"){
             if (mensaje === "No tienes grupos creados"){
                 const parrafoAlerta = document.createElement("p");

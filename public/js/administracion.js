@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //Funciones base
     listadoGrupos();
     listadoMeetis();
+    listadoMeetisCompletados();
 
     function listadoGrupos(){
         const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
@@ -26,44 +27,84 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) =>{
-            if (data.meetis && data.meetis.length > 0){
-                renderListadoMetis(data);
+            // console.log(data)
+            if (data.meetis.length > 0){
+                renderListadoMetis(data, "proximos", "ulMeetis");
             }else {
                 alertas("divAlertasMeetis", "error", "No tienes Meeti's creados");
             }
         }).catch((error) =>{
-            console.log("Error en peticion de listado de meetis");
+            console.log("Error en peticion de listado de meetis proximos");
             console.log(error.message);
         })
     }
 
-    function renderListadoMetis(meetis){
-        const ulMeetis = document.querySelector("#ulMeetis");
-        ulMeetis.innerHTML = "";
+    function listadoMeetisCompletados(){
+        fetch("/administracion/findAllMeetis-completed", {
+            method: "GET"
+        }).then((response) => {
+            return response.json();
+        }).then((data) =>{
+            // console.log(data)
+            renderListadoMetis(data, "pasados", "ulMeetisPasados");
+        }).catch((error) =>{
+            console.log("Error en peticion de listado de meetis completados");
+            console.log(error.message);
+        })
+    }
+
+    function renderListadoMetis(meetis, tipo, lugar){
+        const ulMeetis = document.querySelector(`#${lugar}`);
+        ulMeetis.innerHTML = ""
         const meetisArray = meetis.meetis;
-        meetisArray.forEach((meeti) =>{
-            const liMeeti = document.createElement("li");
-            const fecha = new Date(meeti.fecha)
-            const formatoFecha = fecha.toLocaleDateString("es-MX", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            });
-            liMeeti.innerHTML = `
+
+        if (tipo === "proximos"){
+            meetisArray.forEach((meeti) =>{
+                const liMeeti = document.createElement("li");
+                const fecha = new Date(meeti.fecha)
+                const formatoFecha = fecha.toLocaleDateString("es-MX", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                });
+                liMeeti.innerHTML = `
                 <div class="informacion-admin">
                     <p class="fecha">${formatoFecha}</p>
                     <h3>${meeti.titulo}</h3>
                     <small>${meeti.asitentes}</small>
                 </div>
                 <div class="acciones contenedor-botones">
-                    <a href="#" id="btnEditarMeeti" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
+                    <a href="/administracion/editar-meeti/${meeti.id}" id="btnEditarMeeti" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
                     <a href="#" id="btnAsistenteMeeti" data-id="${meeti.id}"  class="btnCodigo btn-azul2" style="text-decoration: none">Asistentes</a>
                     <a href="#" id="btnEliminarMeeti" data-id="${meeti.id}" class="btnCodigo btn-rojo" style="text-decoration: none">Eliminar</a>
                 </div>
             `;
-            ulMeetis.appendChild(liMeeti);
-        })
+                ulMeetis.appendChild(liMeeti);
+            });
+        }else {
+            meetisArray.forEach((meeti) =>{
+                const liMeeti = document.createElement("li");
+                const fecha = new Date(meeti.fecha)
+                const formatoFecha = fecha.toLocaleDateString("es-MX", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                });
+                liMeeti.innerHTML = `
+                <div class="informacion-admin">
+                    <p class="fecha">${formatoFecha}</p>
+                    <h3>${meeti.titulo}</h3>
+                </div>
+                <div class="acciones contenedor-botones">
+                    <a href="/administracion/editar-meeti/${meeti.id}" id="btnEditarMeetiPasado" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
+                    <a href="#" id="btnEliminarMeetiPasado" data-id="${meeti.id}" class="btnCodigo btn-rojo" style="text-decoration: none">Eliminar</a>
+                </div>
+            `;
+                ulMeetis.appendChild(liMeeti);
+            });
+        }
     }
 
     function renderListadoDeGrupos(grupos){
@@ -95,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //Selectores
     const listaGrupos = document.querySelector("#listaGrupos");
     const listaMeetis = document.querySelector("#ulMeetis");
+    const listaMeetiPasados = document.querySelector("#ulMeetisPasados");
     const formActualizacionGrupo = document.querySelector("#formActualizacionGrupo");
 
     //Eventos
@@ -107,6 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
         listaMeetis.addEventListener("click", identificadorBtn);
     }
 
+    if (listaMeetiPasados){
+        listaMeetiPasados.addEventListener("click", identificadorBtn);
+    }
+
     formActualizacionGrupo.addEventListener("submit", sendActualizacionGrupo);
 
     //Funciones
@@ -114,6 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const tipoBtn = e.target.id;
         const btn = e.target;
+        const id = btn.getAttribute("data-id");
 
         switch (tipoBtn){
             case "btnEliminar":
@@ -122,7 +169,13 @@ document.addEventListener("DOMContentLoaded", () => {
             case "btnEditar":
                 mostrarModalEdicion(btn.getAttribute("data-id"));
                 break;
+            case "btnEditarMeeti":
+                window.location.href = `/administracion/editar-meeti/${id}`;
+                break;
             case "btnEliminarMeeti":
+                peticionDelete(btn.getAttribute("data-id"), "meeti");
+                break;
+            case "btnEliminarMeetiPasado":
                 peticionDelete(btn.getAttribute("data-id"), "meeti");
                 break;
         }
@@ -130,6 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function mostrarModalEdicion(id){
         const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
         await fetch("/administracion/findById", {
             method: "POST",
             headers: {
@@ -174,7 +228,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            modelo === "grupo" ? listadoGrupos() : listadoMeetis();
+            if (modelo === "grupo"){
+                listadoGrupos()
+            } else{
+                listadoMeetis();
+                listadoMeetisCompletados();
+            }
             Swal.fire({
                 title: "¡Exito!",
                 text: "Eliminado correctamente",
