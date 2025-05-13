@@ -16,7 +16,8 @@ import {
     findAllMeetisCompleted, formEditarMeeti, updateMeeti
 } from "../controllers/meetiController.js";
 import upload from "../Middlewares/MulterImgs.js";
-import {requestCreateMeeti} from "../Middlewares/RequestFroms.js";
+import {requestActualizacionPerfil, requestCreateMeeti} from "../Middlewares/RequestFroms.js";
+import {editarPerfilForm, updatedUsuario} from "../controllers/usuarioController.js";
 
 //Rutas de grupos
 router.get("/panel-administracion", protegerRuta, panelDeAdministracion);
@@ -35,6 +36,10 @@ router.post("/nuevo-meeti", protegerRuta, requestCreateMeeti, saveNuevoMeeti);
 router.get("/editar-meeti/:id", protegerRuta, formEditarMeeti);
 router.post("/update-meeti", protegerRuta, requestCreateMeeti, updateMeeti);
 router.delete("/delete-meeti", protegerRuta, eliminarMeeti);
+
+//Rutas de usuarios
+router.get("/editar-perfil", protegerRuta, editarPerfilForm);
+router.post("/update-perfil", protegerRuta,requestActualizacionPerfil, updatedUsuario);
 
 
 export default router;
