@@ -1,0 +1,38 @@
+<main class="contenedor contenedor-formularios no-padding">
+    <h1><%- nombrePagina %></h1>
+
+    <form class="default-form" action="#" id="formEditarPerfil" method="POST">
+
+        <div id="errores"></div>
+        <div class="campo">
+            <label>Nombre</label>
+            <input type="text" name="nombre" id="nombre" value="<%= usuario.nombre%>">
+        </div>
+        <div class="campo descripcion">
+            <label>Quien soy</label>
+            <div class="contenedor-editor">
+                <input type="hidden" id="x" name="descripcion" value="<%= usuario.descripcion%>">
+                <trix-editor input="x"></trix-editor>
+            </div>
+        </div>
+        <div class="campo">
+            <label>E-mail</label>
+            <input type="email" name="email" id="email" value="<%= usuario.email%>">
+        </div>
+
+        <div class="campo">
+            <label for="passwordAnterior">Anterior Password</label>
+            <input type="password" name="passwordVieja" id="passwordVieja">
+        </div>
+
+        <div class="campo">
+            <label for="password">Nueva Password</label>
+            <input type="password" name="password" id="password" placeholder="*******">
+        </div>
+        <div class="campo enviar">
+            <button type="submit" class="btnCodigo btn-rosaCodigo">Guardar Cambios</button>
+        </div>
+    </form>
+</main>
+
+<script src="/js/editarPerfilUsuario.js"></script>

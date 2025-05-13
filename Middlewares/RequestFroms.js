@@ -15,6 +15,16 @@ const registerValidatorCreateUser = [
         })
 ];
 
+const requestActualizacionPerfil = [
+    body("nombre")
+        .exists({checkNull: true, checkFalsy: true}).withMessage("El nombre es obligatorio"),
+    body("email")
+        .isEmail().withMessage("Formato de correo invalido")
+        .normalizeEmail(),
+    body("password")
+        .isLength({min: 5}).withMessage("El password debe tener minimo 5 caracteres")
+];
+
 const requestValidatorLogin = [
     body("email")
         .isEmail().withMessage("Formato de correo invaido")
@@ -49,5 +59,6 @@ const requestCreateMeeti = [
 export {
     registerValidatorCreateUser,
     requestValidatorLogin,
-    requestCreateMeeti
+    requestCreateMeeti,
+    requestActualizacionPerfil
 }

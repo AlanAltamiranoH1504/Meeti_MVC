@@ -21,6 +21,14 @@ const usuario = conexion.define("Usuario", {
     },
     confirmado: {
         type: Sequelize.BOOLEAN,
+    },
+    imagen: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    descripcion: {
+        type: Sequelize.STRING,
+        allowNull: true
     }
 }, {
     tableName: "usuarios",

@@ -172,6 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
             case "btnEditarMeeti":
                 window.location.href = `/administracion/editar-meeti/${id}`;
                 break;
+            case "btnEditarMeetiPasado":
+                window.location.href = `/administracion/editar-meeti/${id}`;
+                break;
             case "btnEliminarMeeti":
                 peticionDelete(btn.getAttribute("data-id"), "meeti");
                 break;
