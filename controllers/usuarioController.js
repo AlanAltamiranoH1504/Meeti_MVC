@@ -98,9 +98,24 @@ const actualizarFoto = async (req, res) => {
     }
 }
 
+const cerrarSesion = (req, res) => {
+
+    try {
+        res.clearCookie("token_meeti");
+        res.status(200).json({
+            msg: "Logout correcto"
+        });
+    }catch (e) {
+        return res.status(500).json({
+            msg: e.message
+        });
+    }
+}
+
 export {
     editarPerfilForm,
     updatedUsuario,
     formImagenPerfil,
-    actualizarFoto
+    actualizarFoto,
+    cerrarSesion
 }
