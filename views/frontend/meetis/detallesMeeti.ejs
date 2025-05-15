@@ -24,7 +24,7 @@
             </div>
         <%} else {%>
             <div class="pregunta-asistencia">
-                <p>¿Asistiras? Inicia Sesión</p>
+                <p>¿Quieres Asistir?</p>
                 <a href="/iniciar-sesion" class="btnCodigo btn-azul text-decoration-none">Inicia Sesión</a>
             </div>
         <%}%>
@@ -83,13 +83,12 @@
                 <p><%= moment(fecha).format("LLLL")%> hrs</p>
             </div>
             <div class="ubicacion">
-                <p><%= meeti.direccion%>, <%= meeti.ciudad%>m <%= meeti.estado%>, <%= meeti.pais%></p>
+                <p><%= meeti.direccion%>, <%= meeti.ciudad%>, <%= meeti.estado%>, <%= meeti.pais%></p>
             </div>
+            <input type="hidden" id="lat" value="<%= meeti.lat%>">
+            <input type="hidden" id="lng" value="<%= meeti.lng%>">
+            <input type="hidden" id="direccion" value="<%= meeti.direccion%>">
+            <div id="ubicacionMeeti"></div>
         </aside>
     </div>
 </main>
-
-<!--<main class="contenedor contenedor-formularios">-->
-<!--    <h1><%- nombrePagina%></h1>-->
-<!--&lt;!&ndash;    <%= JSON.stringify(meeti, null, 2) %>&ndash;&gt;-->
-<!--</main>-->
