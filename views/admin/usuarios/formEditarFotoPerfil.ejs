@@ -1,0 +1,21 @@
+<main class="contenedor contenedor-formularios no-padding">
+    <h1><%=nombrePagina %></h1>
+
+    <form class="default-form" id="formFotoPerfil" method="post" enctype="multipart/form-data">
+        <div class="campo gap-5">
+            <label for="fotoActual" class="fw-semibold">Imagen Actual:</label>
+            <img class="rounded-circle" style="width: 30%;" src='/uploads/img_perfiles/<%= usuario.imagen ? usuario.imagen : 'perfil_default.png'%>'>
+        </div>
+
+        <div class="campo gap-5">
+            <label class="fw-semibold">Imagen</label>
+            <input type="file" name="imagen" id="imagen" >
+        </div>
+
+        <div class="campo enviar">
+            <button type="submit" class="btnCodigo btn-rosaCodigo">Actualizar Foto</button>
+        </div>
+    </form>
+</main>
+
+<script src="/js/imagenPerfil.js"></script>

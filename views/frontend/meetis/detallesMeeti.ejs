@@ -1,0 +1,94 @@
+<div class="encabezado-evento">
+    <div class="contenedor">
+        <div class="resumen-evento">
+            <h1><%=meeti.titulo%></h1>
+
+            <div class="info-autor">
+                <div class="imagen">
+                    <img src="/uploads/img_perfiles/<%= meeti.Usuario.imagen%>">
+                </div>
+                <div class="informacion">
+                    <p>Organizado por:</p>
+                    <p class="autor">
+                        <a href="/usuarios/<%= meeti.Usuario.id%>" class="text-decoration-none"><%= meeti.Usuario.nombre%> <span class="text-black">creador de:</span></a>
+                        <a href="/grupos/<%= meeti.grupo.id%>" class="text-decoration-none"><%= meeti.grupo.nombre%></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <% if (asistencia) {%>
+            <div class="pregunta-asistencia">
+                <p>¿Asistiras?</p>
+                <input type="submit" id="btnAsistencia" class="btnCodigo btn-azul" value="Sí">
+            </div>
+        <%} else {%>
+            <div class="pregunta-asistencia">
+                <p>¿Quieres Asistir?</p>
+                <a href="/iniciar-sesion" class="btnCodigo btn-azul text-decoration-none">Inicia Sesión</a>
+            </div>
+        <%}%>
+    </div>
+</div>
+
+<main class="contenido-evento">
+    <div class="contenedor">
+        <div class="informacion-evento">
+            <div class="descripcion">
+                <img src="/uploads/<%= meeti.grupo.imagen%>">
+                <p><%- meeti.descripcion%></p>
+            </div>
+            <div class="asistentes">
+                <div class="titulo">
+                    <h3><%= meeti.interesados.length%> Asistentes</h3>
+                    <a href="/asistentes/<%= meeti.id%>" class="text-decoration-none">Ver todos</a>
+                </div>
+            </div>
+
+            <div class="comentarios">
+                <h2>Comentarios</h2>
+                <div class="comentario">
+                    <div class="imagen"></div>
+                    <div class="texto">
+                        <p>Hola</p>
+                        <p>Escrito por: <span>Alan Altamirano Hernandez</span></p>
+                        <input type="button" value="Eliminar" class="btnCodigo btn-azul">
+                    </div>
+                </div>
+                <div class="comentario">
+                    <div class="imagen"></div>
+                    <div class="texto">
+                        <p>Hola</p>
+                        <p>Escrito por: <span>Itzel Altamirano Hernandez</span></p>
+                        <input type="button" value="Eliminar" class="btnCodigo btn-azul">
+                    </div>
+                </div>
+
+                <form class="default-form comentarios" method="post" id="formComentarios">
+                    <legend>Agrega un Comentario</legend>
+                    <div class="campo">
+                        <label for="comentario">Comentario</label>
+                        <textarea name="comentario" id="comentario" cols="30" rows="10" placeholder="Tu comentario"></textarea>
+                    </div>
+                    <div class="campo enviar">
+                        <button type="submit" class="btnCodigo btn-rosaCodigo">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <aside class="informacion">
+            <div class="fecha">
+                <% moment.locale("es")%>
+                <% const fecha = meeti.fecha + " " + meeti.hora %>
+                <p><%= moment(fecha).format("LLLL")%> hrs</p>
+            </div>
+            <div class="ubicacion">
+                <p><%= meeti.direccion%>, <%= meeti.ciudad%>, <%= meeti.estado%>, <%= meeti.pais%></p>
+            </div>
+            <input type="hidden" id="lat" value="<%= meeti.lat%>">
+            <input type="hidden" id="lng" value="<%= meeti.lng%>">
+            <input type="hidden" id="direccion" value="<%= meeti.direccion%>">
+            <div id="ubicacionMeeti"></div>
+        </aside>
+    </div>
+</main>

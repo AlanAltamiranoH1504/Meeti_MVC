@@ -1,0 +1,83 @@
+<div class="hero">
+    <h1>Encuentra o crea un grupo para compartir lo que más te gusta</h1>
+    <a href="/auth/crear-cuenta" class="btnCodigo btn-amarillo" style="text-decoration: none">Obtener Cuenta</a>
+</div>
+
+<div class="buscador-inicio">
+    <div class="contenedor">
+        <h2>Busca un grupo en tu ciudad</h2>
+        <form action="#">
+            <select name="categoria">
+                <option value="" disabled selected>-- Selecciona Categoría --</option>
+                <% categorias.forEach(categoria => {%>
+                    <option value="<%= categoria.id%>"><%= categoria.nombre%></option>
+                <% })%>
+            </select>
+            <input type="text" name="nombre" placeholder="Nombre Meeti">
+            <input type="text" name="ciudad" placeholder="Ciudad">
+            <input type="text" name="pais" placeholder="País">
+            <button type="submit" class="btnCodigo btn-rosaCodigo">Buscar</button>
+        </form>
+    </div>
+</div>
+
+<div class="contenedor">
+    <h2>Próximos Meeti's</h2>
+
+    <pre>
+<!--        <%= JSON.stringify(meetis, null, 2) %>-->
+    </pre>
+
+    <div class="grid columnas-md-3 ">
+        <% meetis.forEach(meeti => {%>
+            <div class="card">
+                <img src="/uploads/<%= meeti.grupo.imagen%>" class="img-fluid card-img-top" >
+                <div class="card-texto">
+                    <p class="fecha"><%= meeti.fecha%></p>
+                    <a href="/meetis/meeti/<%= meeti.id%>" class="text-decoration-none">
+                        <h3><%= meeti.titulo%></h3>
+                    </a>
+                    <div class="info-autor">
+                        <div class="imagen">
+                            <img class="" src="/uploads/img_perfiles/<%= meeti.Usuario.imagen%>">
+                        </div>
+                        <div class="informacion">
+                            <p>Organizado por: </p>
+                            <p class="autor"><%= meeti.Usuario.nombre%></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% })%>
+    </div>
+</div>
+
+<main class="bg-gris categorias">
+    <h2>Encuentra Grupos por Categoría</h2>
+
+    <div class="contenedor">
+        <ul class="listado-categorias  grid columnas-2 columnas-md-3">
+
+            <% categorias.forEach(categoria => {%>
+                <a href="/categorias/categoria/<%= categoria.id%>" class="text-decoration-none text-black">
+                    <img src="/img/categoria_<%= categoria.id%>.jpg">
+                    <p> <%= categoria.nombre%></p>
+                </a>
+            <%})%>
+        </ul>
+    </div>
+</main>
+
+<div class="meeti-bg">
+    <div class="contenedor meeti grid columnas-md-2">
+        <section>
+            <h3>Crea un grupo</h3>
+            <p>Comparte lo que te gusta o tu pasión con los demás, crea tu propio grupo hoy mismo sin costos</p>
+        </section>
+        <section>
+            <h3>Únete a un grupo</h3>
+            <p>Conoce personas con tus mismos gustos y pasiones, únete a un grupo ya existente y recibe notificaciones sobre próximos eventos</p>
+        </section>
+    </div>
+</div>
+<!--<script src="/js/home.js"></script>-->

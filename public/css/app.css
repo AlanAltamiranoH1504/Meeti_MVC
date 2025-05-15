@@ -806,3 +806,8 @@ div.asistentes h1,
         flex: 1;
     }
 }
+
+#ubicacionMeeti{
+    height: 400px;
+    width: 85%;
+}

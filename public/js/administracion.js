@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="acciones contenedor-botones">
                     <a href="/administracion/editar-meeti/${meeti.id}" id="btnEditarMeeti" data-id="${meeti.id}" class="btnCodigo btn-verde" style="text-decoration: none">Editar</a>
+                    <a href="/meetis/meeti/${meeti.id}" id="btnVerMeeti" data-id="${meeti.id}" class="btnCodigo btn-rosaCodigo" style="text-decoration: none">Ver</a>
                     <a href="#" id="btnAsistenteMeeti" data-id="${meeti.id}"  class="btnCodigo btn-azul2" style="text-decoration: none">Asistentes</a>
                     <a href="#" id="btnEliminarMeeti" data-id="${meeti.id}" class="btnCodigo btn-rojo" style="text-decoration: none">Eliminar</a>
                 </div>
@@ -138,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const listaMeetis = document.querySelector("#ulMeetis");
     const listaMeetiPasados = document.querySelector("#ulMeetisPasados");
     const formActualizacionGrupo = document.querySelector("#formActualizacionGrupo");
+    const btnCerrarSesion = document.querySelector("#btnCerrarSesion");
 
     //Eventos
     if (listaGrupos) {
@@ -148,12 +150,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (listaMeetis){
         listaMeetis.addEventListener("click", identificadorBtn);
     }
-
     if (listaMeetiPasados){
         listaMeetiPasados.addEventListener("click", identificadorBtn);
     }
-
     formActualizacionGrupo.addEventListener("submit", sendActualizacionGrupo);
+    btnCerrarSesion.addEventListener("click", peticionCierreSesion);
+
 
     //Funciones
     function identificadorBtn(e){
@@ -181,6 +183,10 @@ document.addEventListener("DOMContentLoaded", () => {
             case "btnEliminarMeetiPasado":
                 peticionDelete(btn.getAttribute("data-id"), "meeti");
                 break;
+            case "btnVerMeeti":
+                window.location.href = `/meetis/meeti/${id}`
+                break;
+
         }
     }
 
@@ -288,5 +294,26 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (lugar === "divAlertasMeetis"){
             document.querySelector("#divAlertasMeetis").classList.remove("d-none");
         }
+    }
+
+    function peticionCierreSesion(){
+        const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
+        fetch("/administracion/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": token
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if (data.msg){
+                window.location.href = "http://localhost:3000/";
+            }
+        }).catch((error) => {
+            console.log("Error en peticion para logout");
+            console.log(error.message);
+        })
     }
 })

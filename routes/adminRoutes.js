@@ -17,7 +17,14 @@ import {
 } from "../controllers/meetiController.js";
 import upload from "../Middlewares/MulterImgs.js";
 import {requestActualizacionPerfil, requestCreateMeeti} from "../Middlewares/RequestFroms.js";
-import {editarPerfilForm, updatedUsuario} from "../controllers/usuarioController.js";
+import {
+    actualizarFoto,
+    cerrarSesion,
+    editarPerfilForm,
+    formImagenPerfil,
+    updatedUsuario
+} from "../controllers/usuarioController.js";
+import uploadImgPerfil from "../Middlewares/MulterImgsPerfil.js";
 
 //Rutas de grupos
 router.get("/panel-administracion", protegerRuta, panelDeAdministracion);
@@ -40,6 +47,10 @@ router.delete("/delete-meeti", protegerRuta, eliminarMeeti);
 //Rutas de usuarios
 router.get("/editar-perfil", protegerRuta, editarPerfilForm);
 router.post("/update-perfil", protegerRuta,requestActualizacionPerfil, updatedUsuario);
+router.get("/imagen-perfil", protegerRuta, formImagenPerfil);
+router.post("/imagen-perfil", protegerRuta, uploadImgPerfil.single("imagen"),  actualizarFoto);
+router.post("/logout", protegerRuta, cerrarSesion);
 
+// uploadImgPerfil.single("imagen")
 
 export default router;
