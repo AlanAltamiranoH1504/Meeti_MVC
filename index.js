@@ -21,6 +21,7 @@ dotenv.config();
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
+import categoriaRoutes from "./routes/categoriaRoutes.js";
 import conexion from "./config/db.js";
 
 //Definicion de servidor
@@ -67,6 +68,8 @@ app.use("/auth", authRoutes);
 app.use("/", homeRoutes);
 //Rutas admin
 app.use("/administracion", adminRoutes);
+//Rutas de categorias
+app.use("/categorias", categoriaRoutes);
 
 //Ruta para errores
 app.use((req, res, next) => {
