@@ -3,7 +3,6 @@ import {Grupo, Usuario} from "../../models/index.js";
 import moment from "moment/moment.js";
 import dotenv from "dotenv";
 import {userInSession} from "../../helpers/UserInSession.js";
-import {response} from "express";
 
 dotenv.config();
 
@@ -27,11 +26,13 @@ const muestraMeeti = async (req, res) => {
     let asistencia = false;
     let mensaje = false;
     let confirmacionLista = false;
+    let interesados = false;
 
     if (cookieToken && usuarioEnSesion) {
         if (meeti.usuario_id == usuarioEnSesion) {
             mensaje = true;
             asistencia = false;
+            interesados = true;
         } else {
             if (meeti.interesados.includes(usuarioEnSesion)) {
                 confirmacionLista = true;
@@ -49,6 +50,7 @@ const muestraMeeti = async (req, res) => {
         asistencia,
         mensaje,
         confirmacionLista,
+        interesados,
         usuario: usuarioEnSesion,
         moment
     });
@@ -84,7 +86,7 @@ const confirmacionAsistencia = async (req, res) => {
 
 const cancelarAsistencia = async (req, res) => {
     const {meetiId, usuarioId} = req.body;
-    try{
+    try {
         const meeti = await Meeti.findByPk(meetiId);
         meeti.interesados.pop(usuarioId);
         meeti.changed('interesados', true);
@@ -93,7 +95,52 @@ const cancelarAsistencia = async (req, res) => {
         return res.status(200).json({
             msg: "Interesado eliminado"
         })
-    }catch (e) {
+    } catch (e) {
+        return res.status(500).json({
+            msg: e.message
+        });
+    }
+}
+
+const mostrarAsistentesMeeti = async (req, res) => {
+    const meetiId = req.params.id;
+    const meeti = await Meeti.findByPk(meetiId);
+
+    if (!meeti) {
+        return res.status(404).json({
+            msg: "Meeti no encontrado"
+        });
+    } else {
+        res.render("frontend/meetis/asistentesMeeti", {
+            nombrePagina: `Asistentes de Meeti: ${meeti.titulo}`,
+            csrf: req.csrfToken()
+        })
+    }
+}
+
+const verificacionVisibilidadAsistentes = async (req, res) => {
+    const {id} = req.body;
+    try {
+        const meeti = await Meeti.findOne({
+            where: {id},
+            attributes: ["usuario_id", "interesados"]
+        });
+        const usarioEnSesion = userInSession(req.cookies.token_meeti);
+        if (meeti.usuario_id === usarioEnSesion) {
+            const {interesados} = meeti;
+            const asistentes = await Usuario.findAll({
+                attributes: ["nombre", "imagen", "email"],
+                where: {id: interesados}
+            });
+            return res.status(200).json({
+                asistentes
+            });
+        } else {
+            return res.status(403).json({
+                msg: "Sin credenciales"
+            });
+        }
+    } catch (e) {
         return res.status(500).json({
             msg: e.message
         });
@@ -103,5 +150,7 @@ const cancelarAsistencia = async (req, res) => {
 export {
     muestraMeeti,
     confirmacionAsistencia,
-    cancelarAsistencia
+    cancelarAsistencia,
+    mostrarAsistentesMeeti,
+    verificacionVisibilidadAsistentes
 }

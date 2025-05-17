@@ -29,7 +29,7 @@
             <form action="#" method="post" id="formCancelarConfirmacion">
                 <input type="hidden" name="meetiId" id="meetiIdEliminar" value="<%= meeti.id %>">
                 <input type="hidden" name="usuarioEnSesion" id="usuarioEnSesionEliminar" value="<%= usuario %>">
-                <input type="submit" id="btnAsistencia" class="btnCodigo btn-rojo" value="Cancelar Confirmación">
+                <input type="submit" id="btnAsistencia" class="btnCodigo btn-rojo" value="Cancelar Asistencia">
             </form>
         <% } else if (!asistencia && mensaje) { %>
             <div class="pregunta-asistencia">
@@ -51,13 +51,15 @@
                 <img src="/uploads/<%= meeti.grupo.imagen%>">
                 <p><%- meeti.descripcion%></p>
             </div>
-            <div class="asistentes">
-                <div class="titulo">
-                    <h3><%= meeti.interesados.length%> Asistentes</h3>
-                    <a href="/asistentes/<%= meeti.id%>" class="text-decoration-none">Ver todos</a>
-                </div>
-            </div>
 
+            <% if (interesados){%>
+                <div class="asistentes">
+                    <div class="titulo">
+                        <h3><%= meeti.interesados.length%> Asistentes</h3>
+                        <a href="/meetis/asistentes/<%= meeti.id%>" class="text-decoration-none">Ver todos</a>
+                    </div>
+                </div>
+            <%}%>
             <div class="comentarios">
                 <h2>Comentarios</h2>
                 <div class="comentario">
