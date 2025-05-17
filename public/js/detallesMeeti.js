@@ -45,12 +45,62 @@ document.addEventListener("DOMContentLoaded", () => {
                     text: text,
                     timer: timer
                 });
+                setTimeout(() => {
+                    window.location.href = "/"
+                }, 2000)
             }).catch((error) => {
                 console.log("ERROR EN PETICION AL BACKEND");
             });
         }
 
-    }else{
-        console.log("NO EXISTE EL FORM")
+    }else if (document.querySelector("#formCancelarConfirmacion")){
+        const formCancelarConfirmacion = document.querySelector("#formCancelarConfirmacion");
+        formCancelarConfirmacion.addEventListener("submit", peticionCancelarConfirmacion);
+
+        function peticionCancelarConfirmacion(e){
+            e.preventDefault();
+            const inputMeetiId =  document.querySelector("#meetiIdEliminar").value;
+            const inputUsuarioInteresado = document.querySelector("#usuarioEnSesionEliminar").value;
+            const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
+            const requestBody = {
+                meetiId : inputMeetiId,
+                usuarioId: inputUsuarioInteresado
+            }
+
+            fetch("/meetis/meeti/cancelar-asistencia", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": token
+                },
+                body: JSON.stringify(requestBody)
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                let title, text, icon = "";
+                const timer = 3000
+                if (data.msg === "Interesado eliminado"){
+                    title = "Cancelación Correcta";
+                    text = "Asistencia cancelada correctamente";
+                    icon = "success"
+                }else{
+                    title = "Error en cancelación";
+                    text = "Ocurrio un error en la cancelacion de asistencia";
+                    icon = "error"
+                }
+                Swal.fire({
+                    title,
+                    text,
+                    icon,
+                    timer
+                });
+                setTimeout(() => {
+                    window.location.href = "/"
+                }, 2000)
+            }).catch((error) => {
+                console.log("Error en peticion al backend")
+            })
+        }
     }
 })

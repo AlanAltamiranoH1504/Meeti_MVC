@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <% if (asistencia === true) { %>
+        <% if (asistencia === true && !confirmacionLista) { %>
             <div class="pregunta-asistencia">
                 <p>¿Asistiras?</p>
                 <form action="#" method="POST" id="formConfirmarAsistencia">
@@ -25,6 +25,12 @@
                     <input type="submit" id="btnAsistencia" class="btnCodigo btn-azul" value="Sí">
                 </form>
             </div>
+        <% } else if(asistencia && confirmacionLista){%>
+            <form action="#" method="post" id="formCancelarConfirmacion">
+                <input type="hidden" name="meetiId" id="meetiIdEliminar" value="<%= meeti.id %>">
+                <input type="hidden" name="usuarioEnSesion" id="usuarioEnSesionEliminar" value="<%= usuario %>">
+                <input type="submit" id="btnAsistencia" class="btnCodigo btn-rojo" value="Cancelar Confirmación">
+            </form>
         <% } else if (!asistencia && mensaje) { %>
             <div class="pregunta-asistencia">
                 <p>Consulta los Asistentes</p>
