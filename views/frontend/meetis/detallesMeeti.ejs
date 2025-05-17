@@ -2,7 +2,6 @@
     <div class="contenedor">
         <div class="resumen-evento">
             <h1><%=meeti.titulo%></h1>
-
             <div class="info-autor">
                 <div class="imagen">
                     <img src="/uploads/img_perfiles/<%= meeti.Usuario.imagen%>">
@@ -10,24 +9,38 @@
                 <div class="informacion">
                     <p>Organizado por:</p>
                     <p class="autor">
-                        <a href="/usuarios/<%= meeti.Usuario.id%>" class="text-decoration-none"><%= meeti.Usuario.nombre%> <span class="text-black">creador de:</span></a>
-                        <a href="/grupos/<%= meeti.grupo.id%>" class="text-decoration-none"><%= meeti.grupo.nombre%></a>
+                        <a href="/meetis/usuario/<%= meeti.Usuario.id%>" class="text-decoration-none"><%= meeti.Usuario.nombre%> <span class="text-black">creador de:</span></a>
+                        <a href="/meetis/grupo/<%= meeti.grupo.id%>" class="text-decoration-none"><%= meeti.grupo.nombre%></a>
                     </p>
                 </div>
             </div>
         </div>
 
-        <% if (asistencia) {%>
+        <% if (asistencia === true && !confirmacionLista) { %>
             <div class="pregunta-asistencia">
                 <p>¿Asistiras?</p>
-                <input type="submit" id="btnAsistencia" class="btnCodigo btn-azul" value="Sí">
+                <form action="#" method="POST" id="formConfirmarAsistencia">
+                    <input type="hidden" name="meetiId" id="meetiId" value="<%= meeti.id %>">
+                    <input type="hidden" name="usuarioEnSesion" id="usuarioEnSesion" value="<%= usuario %>">
+                    <input type="submit" id="btnAsistencia" class="btnCodigo btn-azul" value="Sí">
+                </form>
             </div>
-        <%} else {%>
+        <% } else if(asistencia && confirmacionLista){%>
+            <form action="#" method="post" id="formCancelarConfirmacion">
+                <input type="hidden" name="meetiId" id="meetiIdEliminar" value="<%= meeti.id %>">
+                <input type="hidden" name="usuarioEnSesion" id="usuarioEnSesionEliminar" value="<%= usuario %>">
+                <input type="submit" id="btnAsistencia" class="btnCodigo btn-rojo" value="Cancelar Asistencia">
+            </form>
+        <% } else if (!asistencia && mensaje) { %>
+            <div class="pregunta-asistencia">
+                <p>Consulta los Asistentes</p>
+            </div>
+        <% } else if(!asistencia && !mensaje) { %>
             <div class="pregunta-asistencia">
                 <p>¿Quieres Asistir?</p>
                 <a href="/iniciar-sesion" class="btnCodigo btn-azul text-decoration-none">Inicia Sesión</a>
             </div>
-        <%}%>
+        <% } %>
     </div>
 </div>
 
@@ -38,13 +51,15 @@
                 <img src="/uploads/<%= meeti.grupo.imagen%>">
                 <p><%- meeti.descripcion%></p>
             </div>
-            <div class="asistentes">
-                <div class="titulo">
-                    <h3><%= meeti.interesados.length%> Asistentes</h3>
-                    <a href="/asistentes/<%= meeti.id%>" class="text-decoration-none">Ver todos</a>
-                </div>
-            </div>
 
+            <% if (interesados){%>
+                <div class="asistentes">
+                    <div class="titulo">
+                        <h3><%= meeti.interesados.length%> Asistentes</h3>
+                        <a href="/meetis/asistentes/<%= meeti.id%>" class="text-decoration-none">Ver todos</a>
+                    </div>
+                </div>
+            <%}%>
             <div class="comentarios">
                 <h2>Comentarios</h2>
                 <div class="comentario">
@@ -92,3 +107,5 @@
         </aside>
     </div>
 </main>
+
+<script src="/js/detallesMeeti.js"></script>
