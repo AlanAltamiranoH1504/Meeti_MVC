@@ -1,0 +1,34 @@
+<main class="asistentes contenedor">
+    <h1><%= nombrePagina%></h1>
+<!--    <pre>-->
+<!--        <%= JSON.stringify(usuario, null, 2) %>-->
+<!--    </pre>-->
+
+    <div class="informacion-usuario">
+        <div class="imagen">
+            <img src="<%= usuario.imagen ? '/uploads/img_perfiles/' + usuario.imagen : '/uploads/img_perfiles/perfil_default.png' %>">
+        </div>
+        <div class="texto">
+            <%- usuario.descripcion%>
+        </div>
+    </div>
+    <div class="grupos-usuario">
+        <% if (usuario.grupos.length > 0){%>
+            <h2>Grupos de: <%= usuario.nombre%></h2>
+            <ul class="lista-grupos">
+                <% usuario.grupos.forEach(grupo =>{%>
+                    <li>
+                        <div class="imagen">
+                            <img src="/uploads/<%= grupo.imagen%>" alt="img de grupo">
+                        </div>
+                        <div class="texto">
+                            <a href="/meetis/grupos/<%= grupo.id%>" class="text-decoration-none">
+                                <h3 class=" text-black text-center"><%= grupo.nombre%></h3>
+                            </a>
+                        </div>
+                    </li>
+                <%})%>
+            </ul>
+        <%}%>
+    </div>
+</main>
