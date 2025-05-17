@@ -2,7 +2,6 @@
     <div class="contenedor">
         <div class="resumen-evento">
             <h1><%=meeti.titulo%></h1>
-
             <div class="info-autor">
                 <div class="imagen">
                     <img src="/uploads/img_perfiles/<%= meeti.Usuario.imagen%>">
@@ -17,17 +16,25 @@
             </div>
         </div>
 
-        <% if (asistencia) {%>
+        <% if (asistencia === true) { %>
             <div class="pregunta-asistencia">
                 <p>¿Asistiras?</p>
-                <input type="submit" id="btnAsistencia" class="btnCodigo btn-azul" value="Sí">
+                <form action="#" method="POST" id="formConfirmarAsistencia">
+                    <input type="hidden" name="meetiId" id="meetiId" value="<%= meeti.id %>">
+                    <input type="hidden" name="usuarioEnSesion" id="usuarioEnSesion" value="<%= usuario %>">
+                    <input type="submit" id="btnAsistencia" class="btnCodigo btn-azul" value="Sí">
+                </form>
             </div>
-        <%} else {%>
+        <% } else if (!asistencia && mensaje) { %>
+            <div class="pregunta-asistencia">
+                <p>Consulta los Asistentes</p>
+            </div>
+        <% } else if(!asistencia && !mensaje) { %>
             <div class="pregunta-asistencia">
                 <p>¿Quieres Asistir?</p>
                 <a href="/iniciar-sesion" class="btnCodigo btn-azul text-decoration-none">Inicia Sesión</a>
             </div>
-        <%}%>
+        <% } %>
     </div>
 </div>
 
@@ -92,3 +99,5 @@
         </aside>
     </div>
 </main>
+
+<script src="/js/detallesMeeti.js"></script>

@@ -33,7 +33,9 @@
             <div class="card">
                 <img src="/uploads/<%= meeti.grupo.imagen%>" class="img-fluid card-img-top" >
                 <div class="card-texto">
-                    <p class="fecha"><%= meeti.fecha%></p>
+                    <% moment.locale("es")%>
+                    <% const fecha = meeti.fecha%>
+                    <p class="fecha"><%= moment(fecha).format("LLLL")%></p>
                     <a href="/meetis/meeti/<%= meeti.id%>" class="text-decoration-none">
                         <h3><%= meeti.titulo%></h3>
                     </a>

@@ -1,5 +1,6 @@
 import {Categoria, Grupo, Usuario} from "../models/index.js";
 import Meeti from "../models/Meeti.js";
+import moment from "moment";
 
 const home = async (req, res) => {
 
@@ -19,7 +20,8 @@ const home = async (req, res) => {
         nombrePagina: "Inicio",
         csrf: req.csrfToken(),
         categorias: findAllCategorias,
-        meetis: proximosMeetis
+        meetis: proximosMeetis,
+        moment
     });
 }
 
