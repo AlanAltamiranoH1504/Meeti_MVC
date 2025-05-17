@@ -1,7 +1,7 @@
 import Usuario from "../../models/Usuario.js";
 import {Grupo} from "../../models/index.js";
 
-const informacionDueñoMeeti = async (req, res) =>{
+const informacionDueñoMeeti = async (req, res, next) =>{
     const usuario = await Usuario.findOne({
         where: {id: req.params.id},
         attributes: ["nombre", "descripcion", "imagen"],
@@ -9,6 +9,10 @@ const informacionDueñoMeeti = async (req, res) =>{
             {model: Grupo, attributes: ["id", "nombre", "descripcion", "imagen"]}
         ]
     });
+    if (!usuario){
+        res.redirect("/");
+        return next();
+    }
 
     res.render("frontend/usuarios/mostrarPerfil",{
         usuario,
