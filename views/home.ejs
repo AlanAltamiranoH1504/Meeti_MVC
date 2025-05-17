@@ -41,7 +41,7 @@
                     </a>
                     <div class="info-autor">
                         <div class="imagen">
-                            <img class="" src="/uploads/img_perfiles/<%= meeti.Usuario.imagen%>">
+                            <img class="" src="/uploads/img_perfiles/<%= meeti.Usuario.imagen ? meeti.Usuario.imagen : "perfil_default.png"%>">
                         </div>
                         <div class="informacion">
                             <p>Organizado por: </p>
@@ -55,7 +55,7 @@
 </div>
 
 <main class="bg-gris categorias">
-    <h2>Encuentra Grupos por Categoría</h2>
+    <h2>Encuentra Meetis por Categoría</h2>
 
     <div class="contenedor">
         <ul class="listado-categorias  grid columnas-2 columnas-md-3">
