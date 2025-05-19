@@ -18,7 +18,12 @@ const muestraMeeti = async (req, res) => {
         },
         include: [
             {model: Usuario, attributes: ["id", "nombre", "imagen"]},
-            {model: Grupo, attributes: ["id", "nombre", "imagen"]}
+            {model: Grupo, attributes: ["id", "nombre", "imagen"]},
+            {
+                model: Comentario,
+                attributes: ["id", "mensaje", "usuario_id"],
+                include: [{model: Usuario, attributes: ["id", "nombre", "imagen"]}]
+            }
         ]
     });
     if (!meeti) {
@@ -157,8 +162,8 @@ const guardarComentario = async (req, res) => {
     const {comentario, meeti_id} = req.body;
     const usuario_id = userInSession(req.cookies.token_meeti);
 
-    try{
-         const comentarioGuardado = await Comentario.create({
+    try {
+        const comentarioGuardado = await Comentario.create({
             mensaje: comentario,
             usuario_id,
             meeti_id
@@ -166,11 +171,37 @@ const guardarComentario = async (req, res) => {
         return res.status(200).json({
             msg: "Comentario guardado"
         });
-    }catch (e) {
+    } catch (e) {
         return res.status(500).json({
             msg: e.message,
             error: "Error en guardado de comentario"
         });
+    }
+}
+
+const eliminarComentario = async (req, res) => {
+    const {comentarioId, idCreadorComentario} = req.body;
+    const usuarioEnSesion = userInSession(req.cookies.token_meeti);
+
+    try {
+
+        if (idCreadorComentario != usuarioEnSesion){
+            return res.status(403).json({
+                msg: "No puedes eliminar este comentario, no te pertence"
+            })
+        }
+
+        const cometarioEliminado = await Comentario.destroy({
+            where: {id: comentarioId}
+        })
+        return  res.status(200).json({
+            msg: "Comentario Eliminado"
+        });
+    }catch (e) {
+        return res.status(500).json({
+            msg: "Error en la eliminiacion de comentario",
+            error: e.message
+        })
     }
 }
 
@@ -180,5 +211,6 @@ export {
     cancelarAsistencia,
     mostrarAsistentesMeeti,
     verificacionVisibilidadAsistentes,
-    guardarComentario
+    guardarComentario,
+    eliminarComentario
 }

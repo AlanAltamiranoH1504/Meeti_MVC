@@ -1,4 +1,8 @@
 <div class="encabezado-evento">
+
+    <pre>
+<!--        <%= JSON.stringify(meeti, null, 2) %>-->
+    </pre>
     <div class="contenedor">
         <div class="resumen-evento">
             <h1><%=meeti.titulo%></h1>
@@ -60,24 +64,24 @@
                     </div>
                 </div>
             <%}%>
-            <div class="comentarios">
+            <div class="comentarios" id="comentarios">
                 <h2>Comentarios</h2>
-                <div class="comentario">
-                    <div class="imagen"></div>
-                    <div class="texto">
-                        <p>Hola</p>
-                        <p>Escrito por: <span>Alan Altamirano Hernandez</span></p>
-                        <input type="button" value="Eliminar" class="btnCodigo btn-azul">
-                    </div>
-                </div>
-                <div class="comentario">
-                    <div class="imagen"></div>
-                    <div class="texto">
-                        <p>Hola</p>
-                        <p>Escrito por: <span>Itzel Altamirano Hernandez</span></p>
-                        <input type="button" value="Eliminar" class="btnCodigo btn-azul">
-                    </div>
-                </div>
+                <% if (meeti.comentarios.length >= 1) {%>
+                    <% meeti.comentarios.forEach(comentario => {%>
+                        <div class="comentario">
+                            <div class="imagen">
+                                <img src="/uploads/img_perfiles/<%= comentario.Usuario.imagen ? comentario.Usuario.imagen : "perfil_default.png"%>">
+                            </div>
+                            <div class="texto">
+                                <p><%= comentario.mensaje%></p>
+                                <p>Escrito por: <span><%= comentario.Usuario.nombre%></span></p>
+                                <button type="submit" id="btnsEliminacion" class="btnCodigo btn-azul" data-comentario-id="<%= comentario.id%>" data-creador-id="<%= comentario.usuario_id%>">Eliminar</button>
+                            </div>
+                        </div>
+                    <%})%>
+                <%} else {%>
+                    <p class="fw-semibold text-center text-uppercase">No hay Comentarios en este Meeti</p>
+                <%}%>
 
                 <% if (formComentarios) {%>
                     <form class="default-form comentarios" method="post" id="formComentarios">
