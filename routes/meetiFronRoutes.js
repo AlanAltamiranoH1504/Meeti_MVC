@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import {
     cancelarAsistencia,
-    confirmacionAsistencia,
+    confirmacionAsistencia, guardarComentario,
     mostrarAsistentesMeeti,
     muestraMeeti, verificacionVisibilidadAsistentes
 } from "../controllers/frontend/metiControllerFront.js";
@@ -16,5 +16,6 @@ router.get("/asistentes/:id", mostrarAsistentesMeeti);
 router.post("/verificacion", verificacionVisibilidadAsistentes);
 router.get("/usuario/:id", informacionDueñoMeeti);
 router.get("/grupo/:id", informacionGrupo);
+router.post("/guardar-cometario", guardarComentario);
 
 export default router;

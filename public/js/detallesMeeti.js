@@ -1,4 +1,61 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    if (document.querySelector("#formComentarios")){
+        const formComentarios = document.querySelector("#formComentarios");
+        formComentarios.addEventListener("submit", peticionGuardarComentario);
+        function peticionGuardarComentario(e){
+            e.preventDefault();
+            const token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+            const inputMeetiId = document.querySelector("#meeti_id").value;
+            const inputComentario = document.querySelector("#comentario").value;
+
+            if (inputComentario.trim() === "" || inputComentario == null){
+                Swal.fire({
+                    title: "Error",
+                    text: "El comentario debe tener un contenido",
+                    icon: "warning",
+                    timer: 3000
+                });
+                return;
+            }
+
+            const requestBody = {
+                comentario: inputComentario,
+                meeti_id: inputMeetiId
+            }
+
+            fetch("/meetis/guardar-cometario", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": token
+                },
+                body: JSON.stringify(requestBody)
+            }).then((response) => {
+                return response.json();
+            }).then((data) =>{
+                if (data.msg === "Comentario guardado"){
+                    Swal.fire({
+                        title: data.msg,
+                        text: "Se ha agregado tu comentario al meeti",
+                        icon: "success",
+                        timer: 3000
+                    });
+                }else{
+                    Swal.fire({
+                        title: data.msg,
+                        icon: "error",
+                        text: data.error,
+                        timer: 3000
+                    });
+                }
+            }).catch((e) => {
+                console.log("Error en guardado de cometario")
+                console.log(e.message);
+            });
+        }
+    }
+
     if (document.querySelector("#formConfirmarAsistencia")){
         //Selectores
         const formConfirmarAsistencia = document.querySelector("#formConfirmarAsistencia");

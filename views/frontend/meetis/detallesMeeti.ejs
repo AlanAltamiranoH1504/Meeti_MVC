@@ -4,7 +4,7 @@
             <h1><%=meeti.titulo%></h1>
             <div class="info-autor">
                 <div class="imagen">
-                    <img src="/uploads/img_perfiles/<%= meeti.Usuario.imagen%>">
+                    <img src="/uploads/img_perfiles/<%= meeti.Usuario.imagen ? meeti.Usuario.imagen : "perfil_default.png"%>">
                 </div>
                 <div class="informacion">
                     <p>Organizado por:</p>
@@ -79,16 +79,28 @@
                     </div>
                 </div>
 
-                <form class="default-form comentarios" method="post" id="formComentarios">
-                    <legend>Agrega un Comentario</legend>
-                    <div class="campo">
-                        <label for="comentario">Comentario</label>
-                        <textarea name="comentario" id="comentario" cols="30" rows="10" placeholder="Tu comentario"></textarea>
+                <% if (formComentarios) {%>
+                    <form class="default-form comentarios" method="post" id="formComentarios">
+                        <legend>Agrega un Comentario</legend>
+                        <div class="campo">
+                            <input type="hidden" id="meeti_id" name="meeti_id" value="<%= meeti.id%>">
+                            <label for="comentario">Comentario</label>
+                            <textarea name="comentario" id="comentario" cols="30" rows="10" placeholder="Tu comentario"></textarea>
+                        </div>
+                        <div class="campo enviar">
+                            <button type="submit" class="btnCodigo btn-rosaCodigo">Enviar</button>
+                        </div>
+                    </form>
+                <%} else{ %>
+                    <p class="fw-semibold text-center text-uppercase">Inicia Sesion para Agregar Comentarios al Meeti</p>
+                    <div class="container-xl">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-5">
+                                <a href="/iniciar-sesion" class="btnCodigo btn-azul text-decoration-none">Iniciar Sesión</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="campo enviar">
-                        <button type="submit" class="btnCodigo btn-rosaCodigo">Enviar</button>
-                    </div>
-                </form>
+                <%}%>
             </div>
         </div>
         <aside class="informacion">

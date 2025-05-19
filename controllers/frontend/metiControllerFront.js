@@ -3,6 +3,7 @@ import {Grupo, Usuario} from "../../models/index.js";
 import moment from "moment/moment.js";
 import dotenv from "dotenv";
 import {userInSession} from "../../helpers/UserInSession.js";
+import Comentario from "../../models/Comentario.js";
 
 dotenv.config();
 
@@ -27,21 +28,25 @@ const muestraMeeti = async (req, res) => {
     let mensaje = false;
     let confirmacionLista = false;
     let interesados = false;
+    let formComentarios = false;
 
     if (cookieToken && usuarioEnSesion) {
         if (meeti.usuario_id == usuarioEnSesion) {
             mensaje = true;
             asistencia = false;
             interesados = true;
+            formComentarios = true;
         } else {
             if (meeti.interesados.includes(usuarioEnSesion)) {
                 confirmacionLista = true;
             }
+            formComentarios = true;
             asistencia = true;
         }
     } else {
         asistencia = false;
         mensaje = false;
+        formComentarios = false;
     }
     res.render("frontend/meetis/detallesMeeti", {
         nombrePagina: `Meeti: ${meeti.titulo}`,
@@ -51,6 +56,7 @@ const muestraMeeti = async (req, res) => {
         mensaje,
         confirmacionLista,
         interesados,
+        formComentarios,
         usuario: usuarioEnSesion,
         moment
     });
@@ -147,10 +153,32 @@ const verificacionVisibilidadAsistentes = async (req, res) => {
     }
 }
 
+const guardarComentario = async (req, res) => {
+    const {comentario, meeti_id} = req.body;
+    const usuario_id = userInSession(req.cookies.token_meeti);
+
+    try{
+         const comentarioGuardado = await Comentario.create({
+            mensaje: comentario,
+            usuario_id,
+            meeti_id
+        });
+        return res.status(200).json({
+            msg: "Comentario guardado"
+        });
+    }catch (e) {
+        return res.status(500).json({
+            msg: e.message,
+            error: "Error en guardado de comentario"
+        });
+    }
+}
+
 export {
     muestraMeeti,
     confirmacionAsistencia,
     cancelarAsistencia,
     mostrarAsistentesMeeti,
-    verificacionVisibilidadAsistentes
+    verificacionVisibilidadAsistentes,
+    guardarComentario
 }
