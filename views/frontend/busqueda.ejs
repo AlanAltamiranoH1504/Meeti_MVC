@@ -1,0 +1,31 @@
+<div class="contenedor">
+    <h1><%= nombrePagina %></h1>
+    <% if (meetis.length >= 1){ %>
+        <div class="grid columnas-md-3">
+            <% meetis.forEach(meeti =>{ %>
+                <div class="card">
+                    <img src="/uploads/<%= meeti.grupo.imagen%>">
+                    <div class="card-texto">
+                        <% moment.locale("es")%>
+                        <% const fecha = meeti.fecha + " " + meeti.hora %>
+                        <p class="fecha"><%= moment(fecha).format("LLLL")%> hrs</p>
+                        <a class="text-decoration-none" href="/meetis/meeti/<%= meeti.id%>">
+                            <h3><%= meeti.titulo %></h3>
+                        </a>
+                        <div class="info-autor">
+                            <div class="imagen">
+                                <img src="/uploads/img_perfiles/<%= meeti.Usuario.imagen ? meeti.Usuario.imagen : "perfil_default.png"%>">
+                            </div>
+                            <div class="informacion">
+                                <p>Organizado por:</p>
+                                <p class="autor"><%= meeti.Usuario.nombre %></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <p>No hay meetis para esa busqueda</p>
+    <% } %>
+</div>
