@@ -56,9 +56,17 @@ const requestCreateMeeti = [
         .exists({checkNull: true, checkFalsy: true}).withMessage("La longitud es obligatoria")
 ]
 
+const requestEliminarComentario = [
+    body("comentarioId")
+        .exists({checkNull: true, checkFalsy: true}).withMessage("El id del comentario es obligatorio"),
+    body("idCreadorComentario")
+        .exists({checkNull: true, checkFalsy: true}).withMessage("El id del creador del comentario es obligatorip")
+]
+
 export {
     registerValidatorCreateUser,
     requestValidatorLogin,
     requestCreateMeeti,
-    requestActualizacionPerfil
+    requestActualizacionPerfil,
+    requestEliminarComentario
 }

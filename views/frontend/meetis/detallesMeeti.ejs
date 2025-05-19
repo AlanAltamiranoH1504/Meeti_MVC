@@ -1,10 +1,14 @@
 <div class="encabezado-evento">
+
+    <pre>
+<!--        <%= JSON.stringify(meeti, null, 2) %>-->
+    </pre>
     <div class="contenedor">
         <div class="resumen-evento">
             <h1><%=meeti.titulo%></h1>
             <div class="info-autor">
                 <div class="imagen">
-                    <img src="/uploads/img_perfiles/<%= meeti.Usuario.imagen%>">
+                    <img src="/uploads/img_perfiles/<%= meeti.Usuario.imagen ? meeti.Usuario.imagen : "perfil_default.png"%>">
                 </div>
                 <div class="informacion">
                     <p>Organizado por:</p>
@@ -60,35 +64,58 @@
                     </div>
                 </div>
             <%}%>
-            <div class="comentarios">
+            <div class="comentarios" id="comentarios">
                 <h2>Comentarios</h2>
-                <div class="comentario">
-                    <div class="imagen"></div>
-                    <div class="texto">
-                        <p>Hola</p>
-                        <p>Escrito por: <span>Alan Altamirano Hernandez</span></p>
-                        <input type="button" value="Eliminar" class="btnCodigo btn-azul">
-                    </div>
-                </div>
-                <div class="comentario">
-                    <div class="imagen"></div>
-                    <div class="texto">
-                        <p>Hola</p>
-                        <p>Escrito por: <span>Itzel Altamirano Hernandez</span></p>
-                        <input type="button" value="Eliminar" class="btnCodigo btn-azul">
-                    </div>
-                </div>
+                <% if (meeti.comentarios.length >= 1) {%>
+                    <% if (interesados){%>
+                        <div class="container-xl">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-4">
+                                    <button type="button" id="btnEliminarAllComentarios" data-meeti-id="<%=meeti.id%>" class="btn btn-danger mb-5 px-3 py-1 fw-semibold text-uppercase">Eliminar Comentarios</button>
+                                </div>
+                            </div>
+                        </div>
+                    <%}%>
+                    <% meeti.comentarios.forEach(comentario => {%>
+                        <div class="comentario">
+                            <div class="imagen">
+                                <img src="/uploads/img_perfiles/<%= comentario.Usuario.imagen ? comentario.Usuario.imagen : "perfil_default.png"%>">
+                            </div>
+                            <div class="texto">
+                                <p><%= comentario.mensaje%></p>
+                                <p>
+                                    Escrito por: <span><a class="text-decoration-none" href="/meetis/usuario/<%= comentario.Usuario.id%>"><%= comentario.Usuario.nombre%></a></span>
+                                </p>
+                                <button type="submit" id="btnsEliminacion" class="btnCodigo btn-azul" data-comentario-id="<%= comentario.id%>" data-creador-id="<%= comentario.usuario_id%>">Eliminar</button>
+                            </div>
+                        </div>
+                    <%})%>
+                <%} else {%>
+                    <p class="fw-semibold text-center text-uppercase">No hay Comentarios en este Meeti</p>
+                <%}%>
 
-                <form class="default-form comentarios" method="post" id="formComentarios">
-                    <legend>Agrega un Comentario</legend>
-                    <div class="campo">
-                        <label for="comentario">Comentario</label>
-                        <textarea name="comentario" id="comentario" cols="30" rows="10" placeholder="Tu comentario"></textarea>
+                <% if (formComentarios) {%>
+                    <form class="default-form comentarios" method="post" id="formComentarios">
+                        <legend>Agrega un Comentario</legend>
+                        <div class="campo">
+                            <input type="hidden" id="meeti_id" name="meeti_id" value="<%= meeti.id%>">
+                            <label for="comentario">Comentario</label>
+                            <textarea name="comentario" id="comentario" cols="30" rows="10" placeholder="Tu comentario"></textarea>
+                        </div>
+                        <div class="campo enviar">
+                            <button type="submit" class="btnCodigo btn-rosaCodigo">Enviar</button>
+                        </div>
+                    </form>
+                <%} else{ %>
+                    <p class="fw-semibold text-center text-uppercase">Inicia Sesion para Agregar Comentarios al Meeti</p>
+                    <div class="container-xl">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-5">
+                                <a href="/iniciar-sesion" class="btnCodigo btn-azul text-decoration-none">Iniciar Sesión</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="campo enviar">
-                        <button type="submit" class="btnCodigo btn-rosaCodigo">Enviar</button>
-                    </div>
-                </form>
+                <%}%>
             </div>
         </div>
         <aside class="informacion">

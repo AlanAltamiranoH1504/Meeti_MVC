@@ -3,6 +3,7 @@ import {Grupo, Usuario} from "../../models/index.js";
 import moment from "moment/moment.js";
 import dotenv from "dotenv";
 import {userInSession} from "../../helpers/UserInSession.js";
+import Comentario from "../../models/Comentario.js";
 
 dotenv.config();
 
@@ -17,7 +18,12 @@ const muestraMeeti = async (req, res) => {
         },
         include: [
             {model: Usuario, attributes: ["id", "nombre", "imagen"]},
-            {model: Grupo, attributes: ["id", "nombre", "imagen"]}
+            {model: Grupo, attributes: ["id", "nombre", "imagen"]},
+            {
+                model: Comentario,
+                attributes: ["id", "mensaje", "usuario_id"],
+                include: [{model: Usuario, attributes: ["id", "nombre", "imagen"]}]
+            }
         ]
     });
     if (!meeti) {
@@ -27,21 +33,25 @@ const muestraMeeti = async (req, res) => {
     let mensaje = false;
     let confirmacionLista = false;
     let interesados = false;
+    let formComentarios = false;
 
     if (cookieToken && usuarioEnSesion) {
         if (meeti.usuario_id == usuarioEnSesion) {
             mensaje = true;
             asistencia = false;
             interesados = true;
+            formComentarios = true;
         } else {
             if (meeti.interesados.includes(usuarioEnSesion)) {
                 confirmacionLista = true;
             }
+            formComentarios = true;
             asistencia = true;
         }
     } else {
         asistencia = false;
         mensaje = false;
+        formComentarios = false;
     }
     res.render("frontend/meetis/detallesMeeti", {
         nombrePagina: `Meeti: ${meeti.titulo}`,
@@ -51,6 +61,7 @@ const muestraMeeti = async (req, res) => {
         mensaje,
         confirmacionLista,
         interesados,
+        formComentarios,
         usuario: usuarioEnSesion,
         moment
     });
@@ -147,10 +158,87 @@ const verificacionVisibilidadAsistentes = async (req, res) => {
     }
 }
 
+const guardarComentario = async (req, res) => {
+    const {comentario, meeti_id} = req.body;
+    const usuario_id = userInSession(req.cookies.token_meeti);
+
+    try {
+        const comentarioGuardado = await Comentario.create({
+            mensaje: comentario,
+            usuario_id,
+            meeti_id
+        });
+        return res.status(200).json({
+            msg: "Comentario guardado"
+        });
+    } catch (e) {
+        return res.status(500).json({
+            msg: e.message,
+            error: "Error en guardado de comentario"
+        });
+    }
+}
+
+const eliminarComentario = async (req, res) => {
+    const {comentarioId, idCreadorComentario} = req.body;
+    const usuarioEnSesion = userInSession(req.cookies.token_meeti);
+
+    try {
+
+        if (idCreadorComentario != usuarioEnSesion){
+            return res.status(403).json({
+                msg: "No puedes eliminar este comentario, no te pertence"
+            })
+        }
+
+        const cometarioEliminado = await Comentario.destroy({
+            where: {id: comentarioId}
+        })
+        return  res.status(200).json({
+            msg: "Comentario Eliminado"
+        });
+    }catch (e) {
+        return res.status(500).json({
+            msg: "Error en la eliminiacion de comentario",
+            error: e.message
+        })
+    }
+}
+
+const eliminarComentarios = async (req, res, next) => {
+    const {meetiId} = req.body;
+
+    try {
+        const meeti = await Meeti.findByPk(meetiId);
+        if (!meeti){
+            return res.status(500).json({
+                msg: "Error en eliminiacion de comentarios",
+            });
+        }
+
+        const comentarios = await Comentario.destroy({
+            where: {
+                meeti_id: meetiId
+            }
+        });
+        return res.status(200).json({
+            msg: "Eliminacion de Comentarios Correcta",
+        });
+    }catch (e) {
+        return res.status(500).json({
+            msg: "Error en eliminiacion de comentarios",
+            error: e.message
+        });
+    }
+}
+
 export {
     muestraMeeti,
     confirmacionAsistencia,
     cancelarAsistencia,
     mostrarAsistentesMeeti,
-    verificacionVisibilidadAsistentes
+    verificacionVisibilidadAsistentes,
+    guardarComentario,
+    eliminarComentario,
+    eliminarComentarios
 }
