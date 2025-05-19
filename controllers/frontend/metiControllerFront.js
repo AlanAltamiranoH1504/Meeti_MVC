@@ -205,6 +205,33 @@ const eliminarComentario = async (req, res) => {
     }
 }
 
+const eliminarComentarios = async (req, res, next) => {
+    const {meetiId} = req.body;
+
+    try {
+        const meeti = await Meeti.findByPk(meetiId);
+        if (!meeti){
+            return res.status(500).json({
+                msg: "Error en eliminiacion de comentarios",
+            });
+        }
+
+        const comentarios = await Comentario.destroy({
+            where: {
+                meeti_id: meetiId
+            }
+        });
+        return res.status(200).json({
+            msg: "Eliminacion de Comentarios Correcta",
+        });
+    }catch (e) {
+        return res.status(500).json({
+            msg: "Error en eliminiacion de comentarios",
+            error: e.message
+        });
+    }
+}
+
 export {
     muestraMeeti,
     confirmacionAsistencia,
@@ -212,5 +239,6 @@ export {
     mostrarAsistentesMeeti,
     verificacionVisibilidadAsistentes,
     guardarComentario,
-    eliminarComentario
+    eliminarComentario,
+    eliminarComentarios
 }

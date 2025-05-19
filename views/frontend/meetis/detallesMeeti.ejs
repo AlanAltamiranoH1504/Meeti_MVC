@@ -67,6 +67,15 @@
             <div class="comentarios" id="comentarios">
                 <h2>Comentarios</h2>
                 <% if (meeti.comentarios.length >= 1) {%>
+                    <% if (interesados){%>
+                        <div class="container-xl">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-4">
+                                    <button type="button" id="btnEliminarAllComentarios" data-meeti-id="<%=meeti.id%>" class="btn btn-danger mb-5 px-3 py-1 fw-semibold text-uppercase">Eliminar Comentarios</button>
+                                </div>
+                            </div>
+                        </div>
+                    <%}%>
                     <% meeti.comentarios.forEach(comentario => {%>
                         <div class="comentario">
                             <div class="imagen">
@@ -74,7 +83,9 @@
                             </div>
                             <div class="texto">
                                 <p><%= comentario.mensaje%></p>
-                                <p>Escrito por: <span><%= comentario.Usuario.nombre%></span></p>
+                                <p>
+                                    Escrito por: <span><a class="text-decoration-none" href="/meetis/usuario/<%= comentario.Usuario.id%>"><%= comentario.Usuario.nombre%></a></span>
+                                </p>
                                 <button type="submit" id="btnsEliminacion" class="btnCodigo btn-azul" data-comentario-id="<%= comentario.id%>" data-creador-id="<%= comentario.usuario_id%>">Eliminar</button>
                             </div>
                         </div>

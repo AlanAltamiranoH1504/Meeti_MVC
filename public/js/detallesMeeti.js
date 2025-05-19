@@ -65,6 +65,47 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    if (document.querySelector("#btnEliminarAllComentarios")){
+        document.querySelector("#btnEliminarAllComentarios").addEventListener("click", (e) => {
+            e.preventDefault();
+            const btnEliminar = document.querySelector("#btnEliminarAllComentarios");
+            const meetiId = btnEliminar.getAttribute("data-meeti-id");
+
+            fetch("/meetis/eliminar-comentarios", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector("meta[name='csrf-token']").getAttribute("content")
+                },
+                body: JSON.stringify({meetiId})
+            }).then((response) => {
+                if (response.status == 500){
+                    return response.json().then((error) => {
+                        Swal.fire({
+                            title: "Error en eliminación de comentarios",
+                            text: error.msg || "Ocurrió un error. Recarga la página.",
+                            icon: "error",
+                            timer: 3000
+                        });
+                        throw new Error(error.msg);
+                    });
+                }
+                return response.json();
+            }).then((data) => {
+                Swal.fire({
+                    title: data.msg,
+                    text: "Se eliminaron todos los comentarios",
+                    icon: "success",
+                    timer: 3000
+                });
+                setTimeout(() => { window.location.reload()},  3000)
+            }).catch((e) => {
+                // console.log("Error en eliminiacion de todos los coemtarios");
+                // console.log(e.message);
+            })
+        })
+    }
+
     if (document.querySelector("#formComentarios")){
         const formComentarios = document.querySelector("#formComentarios");
         formComentarios.addEventListener("submit", peticionGuardarComentario);
